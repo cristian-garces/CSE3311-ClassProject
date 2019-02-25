@@ -1,0 +1,40 @@
+#login-box {
+    padding-top: 30px;
+    padding-bottom: 40px;
+    width: 52%;
+    max-width: 1089px;
+    min-width: 355px;
+    margin: auto;
+}
+
+#login-box > h1 {
+    font-weight: 800;
+    text-align: center;
+}
+
+#login-box > p:first-of-type {
+    text-align: center;
+    font-weight: 400;
+}
+
+#show-pass {
+    width: 160px;
+    position: relative;
+    right: calc(-100% + 252px);
+    top: 15px;
+    font-size: 1em;
+}
+
+#submit-btn {
+    position: relative;
+    right: calc(-100% + 247px);
+    top: 15px;
+    font-size: 1em;
+}
+
+#netid, #password {
+    font-family:'Inconsolata', monospace;
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}

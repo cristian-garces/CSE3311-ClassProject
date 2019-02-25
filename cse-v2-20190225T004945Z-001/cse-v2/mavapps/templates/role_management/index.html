@@ -1,0 +1,46 @@
+{% extends "main/base.html" %}
+{% block page_title %}CSE Apps | Role Management{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/kt-2.3.2/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.css"/>
+<link rel="stylesheet" href="{{ url_for("static", filename="css/role_management/app.{0}.css".format(git_hash)) }}">
+{% endblock %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container align-middle">
+        <h1 class="display-3 ml-3 my-3"><i class="fas fa-clipboard-check"></i> Role Management</h1>
+        <p class="lead ml-3" id="role-description"><i class="fas fa-info-circle mr-2"></i> Scroll over any column head to see it's description here</p>
+        <hr class="my-4 mx-3">
+        <button type="button" class="btn btn-primary btn-sm float-right mr-3 clearfix base-btn" id="save-button">Save Changes</button>
+        <select class="custom-select custom-select-sm float-right mr-3 select-filter clearfix">
+            <option selected>Filter Users</option>
+            <option value="1">All Users</option>
+            <option value="2">Staff</option>
+            <option value="3">Faculty</option>
+            <option value="4">Tenure Track</option>
+            <option value="5">Students</option>
+            <option value="6">Undergrads</option>
+        </select>
+        <table id="user_table" class="table table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th><i class="far fa-check-square"></i></th>
+                <th>Name</th>
+                <th>Net ID</th>
+                <th title="Staff">STF</th>
+                <th title="Accounting Staff">FINANCE</th>
+                <th title="Undergrad Advisor">UAD</th>
+                <th title="Graduate Advisor">GAD</th>
+                <th title="Staff Administrator">STFADM</th>
+                <th title="Faculty Administrator">FAD</th>
+                <th title="ABET Administrator">ABETADM</th>
+                <th title="Web Developer">DEV</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js_import %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/kt-2.3.2/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="js/role_management/app.{0}.js".format(git_hash)) }}"></script>
+{% endblock %}

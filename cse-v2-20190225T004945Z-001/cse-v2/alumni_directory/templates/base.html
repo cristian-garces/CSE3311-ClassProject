@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block page_title %}Alumni Directory{% endblock %}</title>
+    {% block default_css %}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:100,100i,300,300i,400,400i,500,500i,700,700i|Roboto+Slab:100,300,400,700|Fira+Mono:400,500,700|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.1.3/dist/materia/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/app.css") }}?gh_v={{ git_hash }}">
+    {% endblock %}
+    {% block custom_css %}{% endblock %}
+</head>
+<body>
+    <main class="content">
+        <header id="page-header">
+            <div id="desktop-header">
+                <a href="http://www.uta.edu/uta/">
+                    <img alt="The University of Texas at Arlington" height="48" class="float-left" src="{{ url_for("static", filename="assets/uta.png") }}" width="327"/>
+                </a>
+                <a href="http://www.uta.edu/engineering/">
+                    <img alt="College of Engineering" height="48" class="float-right" src="{{ url_for("static", filename="assets/college_of_engineering.png") }}" width="311"/>
+                </a>
+                <a href="/index.php">
+                    <img alt="Department of Computer Science and Engineering" id="logo" src="{{ url_for("static", filename="assets/department_of_computer_science_and_engineering.png") }}"/>
+                </a>
+            </div>
+            <img alt="Department of Bioengineering at The University of Texas at Arlington" class="print-only" src="{{ url_for("static", filename="assets/print-header.png") }}"/>
+        </header>
+        <div id="top-line"></div>
+        <div id="inner-content-wrapper">
+            {% block content %}{% endblock %}
+            <footer>
+                <div id="footer-extra">
+                    <a href="https://twitter.com/cseuta"><img alt="Follow " src="{{ url_for("static", filename="assets/twitter.png") }}" style="float: none; margin: 0 0 7px  5px;"/></a>
+                    <a href="https://www.facebook.com/cseutarlington"><img alt="Facebook" height="30" src="{{ url_for("static", filename="assets/icon-facebook.png") }}" style="float: none; margin: 0 0 7px  5px;" width="30"/></a>
+                    <a class="align-right" href="https://www.linkedin.com/school/cseuta/"><img alt="LinkedIn" height="30" src="{{ url_for("static", filename="assets/icon-linkedin.png") }}" style="float: none; margin: 0 0 7px 5px;" width="33"/></a><br/>
+                    <a href="/cse-admin/faculty-resources.php">Faculty Resources</a><br/>
+                    <a href="/student-apps/apps.php">Student Apps</a>
+                </div>
+                <div>
+                    <img alt="The University of Texas at Arlington" height="73" src="{{ url_for("static", filename="assets/uta_sm_logo.png") }}" width="82"/>
+                    <p>
+                        <strong>Department of Computer Science and Engineering</strong>
+                        <span class="print-only">[<a href="/">cse.uta.edu</a>]</span><br/>
+                        Engineering Research Building, Room 640, Box 19015, Arlington, TX 76010<br/>
+                        Phone: 817-272-3785 | Fax: 817-272-3784 <br/>
+                        <a href="http://www.uta.edu/"> &#169;  {{ current_date.year }}   The University of Texas at Arlington</a>.
+                    </p>
+                </div>
+            </footer>
+        </div>
+    </main>
+    {% block default_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for("static", filename="js/base.js") }}?gh_v={{ git_hash }}"></script>
+    <script src="{{ url_for("static", filename="js/app.js") }}?gh_v={{ git_hash }}"></script>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+            let queued_msgs = [{% for category, message in messages %}{"text": "{{ message }}", "type": "{{ category }}"}{{ ", " if not loop.last }}{% endfor %}];
+
+            $.each(queued_msgs, function (index, item) {
+                if($.inArray(item.type, toast_types) >= 0) {
+                    toastr[item.type](item.text);
+                }
+                else {
+                    toastr["info"](item.text);
+                }
+            });
+            {% endif %}{% endwith %}
+        });
+    </script>
+    {% endblock %}
+    {% block custom_js_import %}
+    {% endblock %}
+</body>
+</html>

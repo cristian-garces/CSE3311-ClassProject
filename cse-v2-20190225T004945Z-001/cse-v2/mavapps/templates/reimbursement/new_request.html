@@ -1,0 +1,181 @@
+{% extends "reimbursement/index.html" %}
+{% block new_request_link %}../request/{% endblock %}
+{% block view_requests_link %}../../view/requests/{% endblock %}
+{% block user_forms %}
+    <i class="far fa-hand-point-right" id="file-pointer" aria-hidden="true"></i>
+    <form action="../.." class="container dropzone" id="reimbursement-dropzone"></form>
+    <div id="request-info-container">
+        <form class="container" id="request-info" autocomplete="none">
+            <div class="ui styled fluid accordion mr-0 my-4" id="help-info">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    What if my receipts are in a currency other than USD?
+                </div>
+                <div class="content">
+                    <p class="transition hidden">If you have receipts that are not in USD, then try to acquire a statement (e.g., credit card) that is in USD. Otherwise, please visit <a href="https://www.oanda.com/currency/converter/" class="base-link fw-700" target="_blank"><i class="fas fa-link" data-fa-transform="shrink-6"></i>Oanda Currency Converter</a> to manually convert the value of an item to USD.</p>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    How do I request a per diem reimbursement?
+                </div>
+                <div class="content">
+                    <p class="transition visible" style="display: block !important;">To upload a per diem request simply upload a file in any of the accepted formats with a breakdown of meals and incidental expenses, with the value set to the total value being requested.</p>
+                    <div class="ui list">
+                        <div class="item">
+                            <div class="content py-1">
+                                <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates" class="base-link fw-700" target="_blank"><i class="fas fa-link mr-2" data-fa-transform="shrink-4"></i> Domestic Travel Per Diem Rates</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="content py-1">
+                                <a href="https://www.defensetravel.dod.mil/site/perdiemCalc.cfm" class="base-link fw-700" target="_blank"><i class="fas fa-link mr-2" data-fa-transform="shrink-4"></i> International Travel Per Diem Rates</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="content py-1">
+                                <a href="{{ url_for("static", filename="assets/reimbursement/Meal_Per-Diem_Calculator.xlsx") }}" class="base-link fw-700" target="_blank"><i class="fas fa-link mr-2" data-fa-transform="shrink-4"></i> Meal Per Diem Calculator Spreadsheet</a>
+                                <div class="description mt-2"><small class="help-info-description"><i class="fas fa-circle" data-fa-transform="shrink-8"></i> Per diem rate goes in the first row and depends on where you are travelling to.</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    How do I upload multiple files for one item?
+                </div>
+                <div class="content">
+                    <p class="transition hidden">To upload auxiliary files or files with no claimed value for your request simply check the "Auxiliary File" checkbox in the file upload dialog window.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0 no-id-row">
+                    <label for="switch-span">Non-CSE Faculty/Student</label>
+                    <br>
+                    <span class="switch switch-md" id="switch-span">
+                        <input type="checkbox" class="switch" id="no-id-switch">
+                        <label class="base-link" for="no-id-switch"><i class="fas fa-asterisk" data-fa-transform="shrink-6"></i> For external payee.</label>
+                    </span>
+                </div>
+                <div class="col-md-4 mb-3 pl-0 ui search payto-cse-member">
+                    <label for="request-payto-search">Search For Payee</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend p-abs">
+                        <span class="input-group-text" id="search-icon"><i class="search icon"></i></span>
+                      </div>
+                      <input type="text" class="form-control prompt search-prompt" id="request-payto-search" placeholder="Type a UTA ID, Net ID or name" aria-label="Search" aria-describedby="search-icon" autocomplete="none">
+                    </div>
+                    <div class="results search-results"></div>
+                </div>
+                <div class="col-md-4 mb-3 px-0 pay_to_selected payto-cse-member">
+                    <label for="request-payto">Payee 10-Digit ID Number</label>
+                    <input type="text" class="form-control" id="request-payto" placeholder="Search for payee on the left" autocomplete="none" required>
+                </div>
+                <div class="col-md-4 mb-3 pl-0 payto-non-cse">
+                    <label for="request-payto-name">Payee Name</label>
+                    <input type="text" class="form-control" id="request-payto-name" placeholder="Name" disabled>
+                </div>
+                <div class="col-md-4 mb-3 px-0 payto-non-cse">
+                    <label for="request-payto-email">Payee Email</label>
+                    <input type="text" class="form-control" id="request-payto-email" placeholder="E-mail" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0">
+                    <label for="request-type">Request Type</label>
+                    <select id="request-type" class="custom-select" required>
+                        <option value="General">General</option>
+                        <option value="Travel">Travel</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="has-char-count" for="request-title">Request Title<span class="badge badge-light transparent-bg float-right label-badge"><span class="badge badge-primary uta-orange-bg char-count">50</span></span></label>
+                    <input type="text" class="form-control update-char" id="request-title" placeholder="Descriptive request title" maxlength="50" required>
+                </div>
+                <div class="col-md-4 mb-3 px-0">
+                    <label for="request-account">PI Account</label>
+                    <select id="request-account" class="custom-select" required>
+                        <option value="">Select account</option>
+                        {% for account in user_accounts %}
+                        <option value="{{ account.account_number }}">{{ account.account_number }}: {{ account.description|truncate(24, True, '…', 0) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row travel-request">
+                <div class="col-md-2 mb-3 pl-0 ui search travel-from">
+                    <label for="travel-from-search">Origin</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend p-abs">
+                        <span class="input-group-text" id="map-icon"><i class="fas fa-map-marker-alt search icon"></i></span>
+                      </div>
+                      <input type="text" class="form-control prompt search-prompt" id="travel-from-search" placeholder="City, State" aria-label="Search" aria-describedby="map-icon" autocomplete="new-password" disabled>
+                    </div>
+                    <div class="results search-results"></div>
+                </div>
+                <div class="col-md-2 mb-3 pl-0 ui search travel-to">
+                    <label for="travel-to-search">Destination</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend p-abs">
+                        <span class="input-group-text" id="map-icon"><i class="fas fa-map-marker-alt search icon"></i></span>
+                      </div>
+                      <input type="text" class="form-control prompt search-prompt" id="travel-to-search" placeholder="City, State" aria-label="Search" aria-describedby="map-icon" autocomplete="new-password" disabled>
+                    </div>
+                    <div class="results search-results"></div>
+                </div>
+                <div class="col-md-2 mb-3 pl-0">
+                    <label for="travel-from-date">Departing</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend p-abs">
+                            <span class="input-group-text calendar-icon"><i class="far fa-calendar-alt request-calendar-icon"></i></span>
+                        </div>
+                        <input type="text" class="form-control datepicker standard-form-control" id="travel-from-date" placeholder="e.g., Fri Dec 03 2049" disabled>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3 pl-0">
+                    <label for="travel-to-date">Returning</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend p-abs">
+                            <span class="input-group-text calendar-icon"><i class="far fa-calendar-alt request-calendar-icon"></i></span>
+                        </div>
+                        <input type="text" class="form-control datepicker standard-form-control" id="travel-to-date" placeholder="e.g., Sun Dec 12 2049" disabled>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 pr-0">
+                    <label for="travel-number">Travel Number</label>
+                    <input type="text" class="form-control" id="travel-number" placeholder="RTA Number" disabled>
+                </div>
+            </div>
+            <div class="row travel-request">
+                <div class="col-md-6 mb-3 pl-0">
+                    <label for="event-website">Event Website</label>
+                    <input type="text" class="form-control" id="event-website" placeholder="https://example.com or N/A" pattern="^(https?:\/\/(www\.)?)?[\-a-zA-Z0-9@:%\._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#\?&/=]*)|[Nn]{1}[\\/]{1}[Aa]{1}|[Nn]{1}one|[Nn]{1}one [Aa]{1}pplicable" disabled>
+                </div>
+                <div class="col-md-6 d-flex align-items-center justify-content-center mb-3 pr-0">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="ctp-receipts-provided-checkbox" disabled>
+                        <label class="custom-control-label" for="ctp-receipts-provided-checkbox"><i class="fas fa-asterisk" data-fa-transform="shrink-6"></i> I’ve provided all e-receipts for expenses covered by the CTP UTA travel agent (e.g., air ticket, car rental, etc.).</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3 px-0">
+                    <label id="uploaded-files-list-label" for="uploaded-files-list">Uploaded Items<span class="badge badge-light transparent-bg float-right label-badge"><i class="fas fa-dollar-sign text-success mr-1" data-fa-transform="grow-2 down-1"></i><span class="badge badge-success" id="current-total">0.00</span></span></label>
+                    <div class="list-group" id="uploaded-files-list">
+                        <p class="text-danger"><i class="fas fa-exclamation-triangle"></i>  No Files Uploaded</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3 pr-0">
+                    <label class="has-char-count" id="special-notes-label" for="request-special-notes">Special Notes <span class="badge badge-light transparent-bg float-right label-badge"><span class="badge badge-primary uta-orange-bg char-count">1000</span></span></label>
+                    <textarea class="form-control update-char" rows="10" id="request-special-notes" placeholder="Provide any special notes regarding the request here…" maxlength="1000"></textarea>
+                    <button class="btn btn-danger float-left" id="delete-request" type="button">Delete Request</button>
+                    <button class="btn btn-primary base-btn float-right" id="submit-request" type="submit">Submit Request</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-3 px-0">
+                    <small id="last-autosave"><i class="fas fa-exclamation-circle"></i> Last auto-save: N/A</small>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

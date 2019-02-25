@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block page_title %}Alumni Directory | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}?gh_v={{ git_hash }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}?gh_v={{ git_hash }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="login-box">
+        <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+        <hr class="my-4">
+        
+        <h4>Go back to the <a href="{{ url_for('AlumniDirectoryApp:index') }}">Alumni Directory</a></h4>
+        
+        <hr class="my-4">
+
+        <h3>
+            In order to collect the email address associated with your Facebook / Google / LinkedIn account, we need to send a verification link to a valid email address of yours (which can be either idential to or different from the Facebook / Google / LinkedIn account email). For many alumni, we collected their emails when they graduated from UTA. Unfortunately, we do not have your email on record. Please proceed with our manual registration by clicking the link below.
+        </h3>
+        <br><br>
+
+        <form method='POST' action="{{ url_for('AlumniDirectoryApp:alum_dir_init_signup') }}">
+            <div class="form-group"> 
+                <button type="submit" class="btn btn-primary btn-raised">Manual Registration</button>
+            </div>
+        </form>
+</div>
+{% endblock %}

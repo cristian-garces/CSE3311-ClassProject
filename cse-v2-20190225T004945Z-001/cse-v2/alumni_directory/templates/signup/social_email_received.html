@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block page_title %}Alumni Directory | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="login-box">
+        <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+        <hr class="my-4">
+        
+        <h3>Go back to the <a href="/alumni_directory/">Alumni Directory</a></h3>
+            
+        <hr class="my-4">
+
+        <h3>
+            An instruction email on how to proceed containing a link has been sent to <b style="font-weight: bold;">{{social_email}}</b>. This is the social login email that you just provided. <b>Please click on the link in the email within 24 hours</b>. If it is past 24 hours, please go back to the <a href="/mavapps-dev/alumni_directory/">Alumni Directory</a> and restart the registration step.
+        </h3>
+        <br>
+
+        <h3>
+            <ul>
+                <li>If you can't find the email in your inbox, please check the junk/spam folder.</li>
+                <li>If you can't find the email in the junk/spam folder either, please go back to the previous page and provide the social login email again.</li>
+                <li>If you still don't receive the email, please <a href="mailto:webmaster-cse@uta.edu?Subject=CSE%20Alumni%20Directory%20Registration" target="_top">email us</a>.</li>
+            </ul>
+        </h3>
+</div>
+{% endblock %}

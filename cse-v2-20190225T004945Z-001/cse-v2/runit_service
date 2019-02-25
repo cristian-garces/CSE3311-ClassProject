@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# For more info see: http://docs.gunicorn.org/en/stable/deploy.html#runit
+
+GUNICORN=/usr/bin/gunicorn
+ROOT=/opt/www/cse.uta.edu/cse-v2
+PID=/var/run/gunicorn.pid
+
+APP=main:application
+
+if [ -f $PID ]; then rm $PID; fi
+
+cd $ROOT
+exec $GUNICORN -k gthread --threads 8 -w 12 -t 180 --max-requests 250 --certfile /opt/www/certs/server.crt --keyfile /opt/www/certs/server.key --bind 0.0.0.0:5001 'app:app' >> /opt/www/cse.uta.edu/cse-v2/server.log

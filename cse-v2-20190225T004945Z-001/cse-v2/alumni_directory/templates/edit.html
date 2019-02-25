@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% block page_title %}CSE Apps | Alumni Directory{% endblock %}
+{% block custom_css %}
+{% endblock %}
+{% block content %}
+
+<style type="text/css">
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+    #img-display{
+        width: 80%;
+        height: 80%;
+    }
+</style>
+
+<div class="jumbotron jumbotron-fluid">
+    <div>
+        <form class="container" id="profile-change-form" method = "POST" enctype = "multipart/form-data"
+        action = "{{ url_for('AlumniDirectoryApp:update_user') }}" 
+        >
+            <input type="hidden" name="alumnus-id" value="{{ alumnus.id }}">
+            <input type="hidden" id="public_area" value="{{ alumnus.public_area }}">
+
+            <div class="row">
+                <div class="col-md-12 mb-3" style="text-align: center;">
+                    <button class="btn btn-primary base-btn" style="font-size: large;color: #fff;background-color: #007bff;border-color: #007bff;" id="save-button" type="submit">
+                        Save & Logout
+                    </button>
+                </div>
+
+                <div class="col-md-4 mb-3" style="text-align: center;">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn"> 
+                                <span class="btn btn-default btn-file">
+                                    Upload Profile Photo
+                                    <input type="file" name="alumnus-photo" id="alumnus-photo" accept='image/*'>
+                                </span><br><br>
+                                <input type="checkbox" value="PH" name="public_area">
+                                Display the photo when displaying my profile
+                            </span>
+                        </div><br>
+                        <img id='img-display' src="data:;base64,{{ alumnus.photo }}" class="alumni-photo img-responsive rounded-circle" />
+                    </div>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <span class="switch switch-md" id="switch-span">
+                        <input type="checkbox" class="switch" id="alumnus-ispublic" name="alumnus-ispublic" {% if alumnus.ispublic %} checked {%
+                               endif %}>
+                        <label class="base-link" for="alumnus-ispublic"></label>
+                    </span>
+                    <label for="switch-span" style="font-size: medium;">
+                        <b>Include my profile in the public CSE Alumni Directory</b>
+                    </label><br><br>
+  
+                    <label class="has-char-count" style="font-size: medium;">
+                        Email
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="EL" name="public_area">Display this when displaying my profile
+                            <span class="badge badge-primary uta-orange-bg char-count">100</span>
+                        </span>
+                    </label>
+
+                    <input type="text" class="form-control update-char" id="alumnus-email" name="alumnus-email" placeholder="Email"
+                           maxlength="100" value="{{ alumnus.email }}" style="background-color: white"><br>
+
+                     <label class="has-char-count" style="font-size: medium;">
+                        Current Employer
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="ER" name="public_area">Display this when displaying my profile
+                            <span class="badge badge-primary uta-orange-bg char-count">50</span>
+                        </span>
+                    </label>
+                    <input type="text" class="form-control update-char" name="alumnus-company"
+                           placeholder="Current Employer" maxlength="50" value="{{ alumnus.company }}" 
+                           style="background-color: white"><br>
+
+                    <label class="has-char-count" style="font-size: medium;">
+                        Current Title
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="TT" name="public_area">Display this when displaying my profile
+                            <span class="badge badge-primary uta-orange-bg char-count">50</span>
+                        </span>
+                    </label>
+                    <input type="text" class="form-control update-char" name="alumnus-title" placeholder="Current Title"
+                           maxlength="50" value="{{ alumnus.title }}" style="background-color: white"><br>
+
+                    <label style="font-size: medium;">
+                        Current Location
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="LO" name="public_area">Display this when displaying my profile
+                        </span>
+                    </label>
+
+                    <input type="hidden" id="old_country" value="{{ alumnus.country }}">
+                    <select id="alumnus-country" name="alumnus-country" class="custom-select">
+                        <option value=''>Select Country/Region</option>
+                    </select>
+
+                    <input type="hidden" id="old_state" value="{{ alumnus.state }}">
+                    <select id="alumnus-state" name="alumnus-state" class="custom-select">
+                        <option value=''>Select State</option>
+                    </select>
+                </div>
+
+
+                <!-- MODAL -->
+                <!-- https://fezvrasta.github.io/bootstrap-material-design/docs/4.0/bootstrap-components/modal/  
+                -->
+                
+                <div class="col-md-4 mb-3">
+                        
+                        
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Change Email
+                        </button>
+                        
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Change your email</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    
+                                    <div class="modal-body">
+
+                                        <div class="container">
+                                            <div class="col-md-6 mb-3 pr-0">
+                                                    <label class="has-char-count" style="font-size: medium;">
+                                                        Email
+                                                    </label>
+                                
+                                                    <input type="text" class="form-control update-char" id="alumnus-email-popup" placeholder="Email"
+                                                        maxlength="100" value="{{ alumnus.email }}" style="background-color: white">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3 pr-0" id="confirm_div">
+                                                    <label class="has-char-count" style="font-size: medium;">
+                                                        Confirm Email
+                                                        </span>
+                                                    </label>
+
+                                                    <input type="text" class="form-control update-char" id="confirm-email-popup" placeholder="Confirm Email"
+                                                            maxlength="100" style="background-color: white">
+                                            </div>
+
+                                            
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="save-email-changes">Submit</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3 pr-0">
+                    <label class="has-char-count" style="font-size: medium;">
+                        Biography
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="BI" name="public_area">Display this when displaying my profile
+                            <span class="badge badge-primary uta-orange-bg char-count">500</span>
+                        </span>
+                    </label>
+
+                    <textarea class="form-control update-char" rows="10" name="alumnus-biography" placeholder="Biography"
+                              maxlength="500" style="background-color: white; width: 99%;">{{ alumnus.biography }}</textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="has-char-count" style="font-size: medium;">
+                        Twitter
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="TW" name="public_area">Display this when displaying my profile
+                        </span>
+                    </label>
+
+                    <input type="text" class="form-control update-char" id="alumnus-twitter" name="alumnus-twitter" placeholder="https://twitter.com/"
+                           maxlength="100" value="{{ alumnus.twitter }}" style="background-color: white">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="has-char-count" style="font-size: medium;">
+                        Facebook
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="FB" name="public_area">Display this when displaying my profile
+                        </span>
+                    </label>
+
+                    <input type="text" class="form-control update-char" id="alumnus-facebook" name="alumnus-facebook" placeholder="https://www.facebook.com/"
+                           maxlength="100" value="{{ alumnus.facebook }}" style="background-color: white">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="has-char-count" style="font-size: medium;">
+                        LinkedIn
+                        <span class="badge badge-light transparent-bg float-right label-badge"
+                              style="font-size: small;">
+                            <input type="checkbox" value="LI" name="public_area">Display this when displaying my profile
+                        </span>
+                    </label>
+
+                    <input type="text" class="form-control update-char" id="alumnus-linkedin" name="alumnus-linkedin" placeholder="https://www.linkedin.com/"
+                           maxlength="100" value="{{ alumnus.linkedin }}" style="background-color: white">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js_import %}
+<script type="application/javascript">
+    let alumni_email_field = $("#alumnus-email");
+    const original_email = alumni_email_field.val();
+
+    $(document).ready(function () {
+        //public/private profile
+        $("#alumnus-ispublic").change();
+
+        //confirm email
+        // $("#confirm_div").hide();
+
+        //current location
+        $.getJSON("{{ url_for("static", filename="assets/dropdownlist.json") }}", function( data ) {
+            $.each(data["Country"], function (key, val) {
+                $("#alumnus-country").append("<option value='" + key + "'>" + val + "</option>");
+            });
+
+            if ($("#old_country").val().length == 3) {
+                $("#alumnus-country").val($("#old_country").val());
+            }
+
+            $.each(data["State"], function (key, val) {
+                $("#alumnus-state").append("<option value='" + key + "'>" + val + "</option>");
+            });
+
+            if ($("#old_state").val().length == 2) {
+                $("#alumnus-state").val($("#old_state").val());
+            }
+
+            $("#alumnus-country").change();
+        });
+
+        //public area
+        $("input:checkbox[name=public_area]").each(function () {
+            if ($("#public_area").val().includes($(this).val())) {
+                $(this).prop("checked", true);
+            }
+        });
+
+        $('#alumnus-twitter').focusout();
+        $('#alumnus-facebook').focusout();
+        $('#alumnus-linkedin').focusout();
+
+        //photo
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-display').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#alumnus-photo").change(function(){
+            readURL(this);
+        }); 
+
+        function checkEmails() {
+            return($('#alumnus-email-popup').val() == $('#confirm-email-popup').val());
+        }   
+
+        $('#save-email-changes').click(function(event) {
+            console.log(checkEmails());
+
+            if (checkEmails()){
+                var alumnus = $('#alumnus-email-popup').val();
+                var package = JSON.stringify({
+                    "alumnus" : alumnus
+                }, null, '\t');
+                console.log("var package: "+ package);
+                $.ajax({
+                    url: " {{url_for('AlumniDirectoryApp:initiate_email_update')}} ",
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: 'application/json;charset=UTF-8',
+                    data: package,
+                    success: function(resp) {
+                        console.log(resp)
+                        console.log("Success");
+                    },
+                    error: function(req, status, err) {
+                        console.log("Failure");
+                    }
+                });
+            }
+        });
+ 
+    });
+
+    $("#alumnus-ispublic").change(function (e) {
+        if ($("#alumnus-ispublic").prop('checked')) {
+            $("input:checkbox[name=public_area]").each(function () {
+                $(this).prop("disabled", false);
+            });
+        }
+        else {
+            $("input:checkbox[name=public_area]").each(function () {
+                $(this).prop("checked", false);
+                $(this).prop("disabled", true);
+            });
+        }
+    });
+
+    alumni_email_field.keyup(function (e) {
+        let email_confirm_container = $("#confirm_div");
+        let email_confirm_field = $("#confirm_email");
+
+        if (alumni_email_field.val() === original_email) {
+            email_confirm_container.hide();
+            email_confirm_field.prop('required', false);
+            email_confirm_field.prop('disabled', true);
+        }
+        else {
+            email_confirm_container.show();
+            email_confirm_field.prop('required', true);
+            email_confirm_field.prop('disabled', false);
+        }
+    });
+
+    $("#alumnus-country").change(function (e) {
+        if ($("#alumnus-country").val() != "USA") {
+            $("#alumnus-state").hide();
+        }
+        else {
+            $("#alumnus-state").show();
+        }
+    });
+
+    $("#alumnus-twitter").focusout(function (e) {
+        var val = $("#alumnus-twitter").val();
+        var link = "https://twitter.com/"
+
+        if(val.length == 0 ) {
+            $("input:checkbox[name=public_area][value=TW]").prop("checked", false);
+            $("input:checkbox[name=public_area][value=TW]").prop("disabled", true);
+        }
+        else if(val.length <= link.length || !val.startsWith(link)) {
+            alert("Incorrect Twitter Link");
+            $("#alumnus-twitter").val("");
+            $("#alumnus-twitter").focus();
+        }
+    });
+
+    $("#alumnus-facebook").focusout(function (e) {
+        var val = $("#alumnus-facebook").val();
+        var link = "https://www.facebook.com/"
+
+        if(val.length == 0 ) {
+            $("input:checkbox[name=public_area][value=FB]").prop("checked", false);
+            $("input:checkbox[name=public_area][value=FB]").prop("disabled", true);
+        }
+        else if(val.length <= link.length || !val.startsWith(link)) {
+            alert("Incorrect Facebook Link");
+            $("#alumnus-facebook").val("");
+            $("#alumnus-facebook").focus();
+        }
+    });
+
+    $("#alumnus-linkedin").focusout(function (e) {
+        var val = $("#alumnus-linkedin").val();
+        var link = "https://www.linkedin.com/"
+
+        if(val.length == 0 ) {
+            $("input:checkbox[name=public_area][value=LI]").prop("checked", false);
+            $("input:checkbox[name=public_area][value=LI]").prop("disabled", true);
+        }
+        else if(val.length <= link.length || !val.startsWith(link)) {
+            alert("Incorrect LinkedIn Link");
+            $("#alumnus-linkedin").val("");
+            $("#alumnus-linkedin").focus();
+        }
+    });
+</script>
+{% endblock %}

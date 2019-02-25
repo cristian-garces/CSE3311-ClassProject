@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="1050x1050" href="{{ url_for("static", filename="assets/main/favicons/favicon-1050x1050.png") }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for("static", filename="assets/main/favicons/favicon-512x512.png") }}">
+    <link rel="icon" type="image/png" sizes="310x310" href="{{ url_for("static", filename="assets/main/favicons/favicon-310x310.png") }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for("static", filename="assets/main/favicons/favicon-192x192.png") }}">
+    <link rel="icon" type="image/png" sizes="144x144" href="{{ url_for("static", filename="assets/main/favicons/favicon-144x144.png") }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for("static", filename="assets/main/favicons/favicon-96x96.png") }}">
+    <link rel="icon" type="image/png" sizes="72x72" href="{{ url_for("static", filename="assets/main/favicons/favicon-72x72.png") }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for("static", filename="assets/main/favicons/favicon-32x32.png") }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for("static", filename="assets/main/favicons/favicon-16x16.png") }}">
+    <title>{% block page_title %}CSE Apps{% endblock %}</title>
+    {% block default_css %}
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Mono:100,100i,300,300i,400,400i,500,500i,700,700i|Roboto+Slab:100,300,400,700|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.2.1/dist/materia/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/main/semantic.min.{0}.css".format(git_hash)) }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vex-js@4.1.0/dist/css/vex.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vex-js@4.1.0/dist/css/vex-theme-flat-attack.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday@1.8.0/css/pikaday.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.5.1/dist/min/dropzone.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.11/dist/summernote-bs4.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/main/base.{0}.css".format(git_hash)) }}">
+    {% endblock %}
+    {% block custom_css %}{% endblock %}
+</head>
+<body class="pushable" style="overflow-x: auto;">
+    {% if current_user.is_authenticated %}
+    <div id="session-warning-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header p-0"></div>
+                <div class="modal-body px-3 pt-4 pb-3">
+                    <h6 class="text-center w-100 uta-dark-blue">Your session will expire in <span id="remaining-time" class="uta-orange"></span> <i class="uta-orange not-italic">minutes</i> due to inactivity.</h6>
+                </div>
+                <div class="modal-footer p-3">
+                    <button id="log-out" class="btn b-1s base-danger-btn w-50 mr-2" type="button" data-dismiss="modal">Log Out</button>
+                    <button id="stay-logged-in" class="btn b-1s base-btn w-50 ml-2" type="button" data-dismiss="modal">Stay Logged In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% block navbar %}{% include 'main/navbar.html' %}{% endblock %}
+    {% if (usurper_roles.DEV == true or usurper_roles.SADM == true) and current_user.is_authenticated %}
+    <div class="search ui" id="usurp-search">
+        <div class="input-group">
+            <input type="text" class="form-control prompt search-prompt" id="usurp-search-input"
+                   placeholder="View as" aria-label="Search" aria-describedby="search-icon">
+        </div>
+        <div class="results search-results"></div>
+    </div>
+    {% endif %}
+    {% block before_drawer %}{% endblock %}
+    <div id="main-layout-container" class="pusher d-flex flex-column justify-content-between">
+        {% block header %}{% include "main/header.html" %}{% endblock %}
+        <main class="content">
+            <div class="base-spacer"></div>
+            {% block content %}{% endblock %}
+            <div class="base-spacer"></div>
+        </main>
+        {% block footer %}{% include "main/footer.html" %}{% endblock %}
+    </div>
+    <a href="#" id="back-to-top" title=""><i class="fas fa-arrow-up" data-fa-transform="grow-5 down-2" aria-hidden="true"></i></a>
+    {% block after_drawer %}{% endblock %}
+    {% block default_js %}
+    <script defer src="https://use.fontawesome.com/releases/v5.6.3/js/all.js" integrity="sha384-EIHISlAOj4zgYieurP0SdoiBYfGJKkgWedPHH4jCzpCXLmzVsw1ouK59MuUtP4a1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dropzone@5.5.1/dist/min/dropzone.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vex-js@4.1.0/dist/js/vex.combined.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.0/dist/FileSaver.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday@1.8.0/pikaday.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.11/dist/summernote-bs4.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for("static", filename="js/main/base.{0}.js".format(git_hash)) }}"></script>
+    <script type="application/javascript">
+        const root_path = "{{ root_path }}";
+        const current_user = {net_id: "{{ current_user.net_id }}",
+                              uta_id: "{{ current_user.uta_id }}",
+                              first_name: "{{ current_user.first_name }}",
+                              middle_name: "{{ current_user.middle_name }}",
+                              last_name: "{{ current_user.last_name }}",
+                              email: "{{ current_user.email }}",
+                              phone_number: "{{ current_user.phone_number }}",
+                              user_roles: {{ user_roles|tojson }}};
+        {% if current_user.is_authenticated %}
+        const sessMon = sessionMonitor({
+             sessionLifetime: 30 * 60 * 1000,
+             timeBeforeWarning: 5 * 60 * 1000,
+             minPingInterval: 60 * 1000,
+             pingUrl: '{{ root_path }}ping',
+             timeoutRedirectUrl: '{{ root_path }}login',
+             activityEvents: 'mouseup',
+             onwarning: function() {
+                $("#session-warning-modal").modal("show");
+             }
+        });
+        {% endif %}
+
+        {% if (usurper_roles.DEV == true or usurper_roles.SADM == true) and current_user.is_authenticated %}
+        $("#usurp-search").search({
+            minCharacters : 2,
+            selectFirstResult: true,
+            searchDelay: 50,
+            showNoResults: true,
+            apiSettings   : {
+                onResponse: function(APIResponse) {
+                    let response = {
+                        results : []
+                    };
+
+                    $.each(APIResponse, function(index, item) {
+                        if (item.is_active) {
+                            response.results.push({
+                                title: (item.first_name + " " + item.last_name),
+                                description: item.net_id,
+                                url: root_path + "usurp/" + item.net_id
+                            });
+                        }
+                    });
+
+                    return response;
+                },
+                url: root_path + "api/search/user/name/and/net_id/{query}"
+            }
+        });
+        {% endif %}
+
+        $(document).ready(function () {
+            {% if current_user.is_authenticated %}
+            $("#session-warning-modal").modal({
+                "backdrop": "static",
+                "keyboard": false,
+                "show": false
+            }).on("click", "#stay-logged-in", sessMon.extendsess).on("click", "#log-out", sessMon.logout).find("#remaining-time").text(Math.round(sessMon.timeBeforeWarning / 60 / 1000));
+            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+            let queued_msgs = [{% for category, message in messages %}{"text": "{{ message }}", "type": "{{ category }}"}{{ ", " if not loop.last }}{% endfor %}];
+
+            $.each(queued_msgs, function (index, item) {
+                if($.inArray(item.type, toast_types) >= 0) {
+                    toastr[item.type](item.text);
+                }
+                else {
+                    toastr["info"](item.text);
+                }
+            });
+            {% endif %}{% endwith %}
+        });
+    </script>
+    {% block custom_js_import %}{% endblock %}
+    {% endblock %}
+</body>
+</html>

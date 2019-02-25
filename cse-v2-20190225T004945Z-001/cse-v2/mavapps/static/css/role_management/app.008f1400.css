@@ -1,0 +1,244 @@
+.jumbotron {
+    width: 100%;
+    margin: 0;
+}
+
+.jumbotron > .container > .display-3 {
+    font-weight: 700;
+}
+
+.jumbotron > .container > .lead {
+    font-weight: 400;
+}
+
+select.custom-select, select.form-control, input.form-control {
+    font-size: 1em;
+    font-weight: 600;
+}
+
+table.dataTable {
+    width: 99.9% !important;
+    background-color: rgba(255, 255, 255, 0);
+    border-collapse: collapse !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 100, 177, 0.20)
+}
+
+thead > tr > th {
+    text-align: center;
+}
+
+#user_table_wrapper {
+    padding-right: 2rem !important;
+    padding-left: 2rem !important;
+}
+
+div.dataTables_wrapper div.dataTables_length label, div.dataTables_wrapper div.dataTables_filter label, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate {
+    font-weight: 500;
+}
+
+#user_table_wrapper > div > div:nth-child(2) {
+    padding-right: 0 !important;
+}
+
+#user_table_wrapper > div:nth-child(1) > div:nth-child(1), #user_table_wrapper > div:nth-child(3) > div:nth-child(1)  {
+    padding-left: 0;
+}
+
+#user_table_wrapper > div:nth-child(2) > div {
+    overflow-x: auto;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+#user_table_processing {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+#user_table_filter > label {
+    width: 100%;
+}
+
+#user_table_filter > label > input {
+    width: 87%;
+    height: 38px !important;
+}
+
+table.dataTable tbody td.select-checkbox:before, table.dataTable tbody th.select-checkbox:before {
+    position: absolute;
+    top: calc(50% - 7px);
+    left: calc(50% - .48rem);
+    display: block;
+    margin: 0 0 0 0;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: rgba(33, 37, 41, 0.25);
+    border: 1px solid rgb(33, 37, 41);
+    border-radius: .2rem;
+    box-sizing: border-box;
+}
+
+table.dataTable tr.selected td.select-checkbox:after, table.dataTable tr.selected th.select-checkbox:after {
+    position: absolute;
+    top: calc(50% - 7px);
+    left: calc(50% - .48rem);
+    display: block;
+    margin: 0 0 0 0;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    text-shadow: none;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: .2rem;
+    background: rgb(0, 100, 177) url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: 50% 50%;
+    box-sizing: border-box;
+}
+
+table.dataTable tbody > tr.selected, table.dataTable tbody > tr >.selected {
+    background-color: rgba(0, 100, 177, 0.9);
+}
+
+table > thead > tr > th {
+    font-size: 0.8rem;
+}
+
+table > thead > tr > th:nth-child(n+3) {
+    width: 50px !important;
+}
+
+tbody > tr {
+    height: 65px;
+}
+
+tbody > tr > td:nth-child(2), tbody > tr > td:nth-child(3) {
+    font-size: .85rem;
+    font-weight: 500;
+}
+
+tbody > tr > td:nth-child(3) {
+    font-family: 'Fira Mono', monospace;
+    text-align: center;
+}
+
+.custom-control-label:before{
+    background-color: rgba(245, 128, 38, 0.25);
+    border: 1px dotted rgb(245, 128, 38);
+    box-shadow: none;
+}
+
+.custom-control-label:after {
+    top: 0.15rem !important;
+    left: -2.85rem !important;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: rgb(0, 100, 177);
+    border: 1px solid rgb(0, 100, 177);
+}
+
+.selected > td > .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.dataTables_length > label > select {
+    height: 38px !important;
+}
+
+#save-button {
+    padding-top: 0;
+    height: 38px;
+    line-height: 38px;
+    font-weight: 600;
+}
+
+.select-filter {
+    width: 125px;
+    margin-right: 1.85rem;
+}
+
+.center-checkbox {
+	margin-left: calc(50% - 7px);
+}
+
+div.dataTables_processing {
+    z-index: 1;
+}
+
+.page-link {
+    color: rgb(0, 100, 177) !important;
+    transition: color 150ms ease-in;
+}
+
+.page-link:hover {
+    color: rgb(245, 128, 38) !important;
+    transition: color 150ms ease-out;
+}
+
+.page-item.active .page-link {
+    color: white !important;
+    background-color: rgb(0, 100, 177) !important;
+    border-color: rgb(0, 100, 177) !important;
+}
+
+@media (max-width: 1199px) {
+    #user_table_wrapper > div:nth-child(1) > div:nth-child(2) {
+        padding-right: 15px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    div.dataTables_filter > label > input {
+        width: 140px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .jumbotron > .container > .display-3 {
+        font-size: 3.2rem;
+        text-align: center;
+    }
+
+    .jumbotron > .container > .lead {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    div.dataTables_filter > label > input {
+        width: 431px !important;
+    }
+
+    #user_table_wrapper > div > div:nth-child(2) {
+        padding-left: 0 !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_length,  div.dataTables_wrapper div.dataTables_filter {
+        text-align: left !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_info {
+        text-align: center !important;
+        margin-bottom: .6rem;
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: center !important;
+    }
+}
+
+@media (max-width: 575px) {
+    div.dataTables_filter > label > input {
+        width: calc(100vw - 123px) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    div.dataTables_filter > label > input {
+        width: 357px !important;
+    }
+}

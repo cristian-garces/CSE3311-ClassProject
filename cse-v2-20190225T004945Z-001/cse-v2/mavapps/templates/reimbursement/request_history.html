@@ -1,0 +1,30 @@
+{% for upload in uploads if (upload.request_returned == true and user_roles.STFADM == false) or upload.request_returned == false %}
+<div class="ui longer modal semantic-modal" id="request-history-modal-{{ loop.index0 }}" tabindex="-1">
+    <i class="close icon"></i>
+    <div class="header text-center">Request History</div>
+    <div class="scrolling content">
+        {% for item in upload.history if upload.history %}
+        <table class="ui {% if item.action == "Submitted" or item.action == "Resubmitted" %}blue{% elif item.action == "Processed" %}orange{% elif item.action == "Unprocessed" %}teal{% elif item.action == "Returned" %}red{% else %}black{% endif %} table">
+            <thead>
+            <tr>
+                <th>{{ item.actor.first_name|truncate(30, True, '…', 0) }}</th>
+                <th>{{ item.action }}</th>
+                <th>{{ item.date }} - {{ item.time }}</th>
+            </thead>
+            {% if item.metadata %}
+            <tbody>
+                {% for key, value in item.metadata.items() %}
+                <tr>
+                    <td class="fw-700">{{ key.split("_")|join(' ')|title }}</td>
+                    <td colspan="2">{% if value.split("_")|join(' ')|trim != "" %}{{ value.split("_")|join(' ')|title }}{% else %}N/A{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+        {% else %}
+        <span class="badge badge-pill badge-danger no-requests">History Unavailable</span>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}

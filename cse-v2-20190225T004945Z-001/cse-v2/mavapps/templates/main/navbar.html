@@ -1,0 +1,30 @@
+<div id="main-site-drawer" class="ui sidebar inverted vertical menu bg-faded">
+    <header>
+        <a class="navbar-brand drawer-navbar-brand d-flex justify-content-center align-items-center" href="/">
+            <img src="{{ url_for("static", filename="assets/main/cse-nav-logo.gif") }}" width="212" height="29" alt="">
+        </a>
+    </header>
+    <a class="nav-link base-link" href="{{ root_path }}"><i class="fas fa-home width-16 text-center" aria-hidden="true"></i> Home</a>
+    <a href="#main-drawer-apps-collapse" class="nav-link {% if user_apps|length < 1 %}text-danger no-apps{% else %}base-link{% endif %}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="main-drawer-apps-collapse">
+        <i class="fab fa-python width-16 text-center"></i> Python Apps
+    </a>
+    {% if user_apps|length > 0 %}
+    <div class="collapse show" id="main-drawer-apps-collapse">
+        {% for app in user_apps %}
+        <a class="nav-link base-link pl-5" href="{{ root_path }}{{ app|lower|replace(" ", "_") }}/">{{ app|title }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <a href="#main-drawer-php-apps-collapse" class="nav-link base-link"  data-toggle="collapse" role="button" aria-expanded="false" aria-controls="main-drawer-php-apps-collapse">
+        <i class="fab fa-php width-16 text-center"></i> PHP Apps
+    </a>
+    <div class="collapse show" id="main-drawer-php-apps-collapse">
+        <a class="nav-link base-link pl-5" href="/cse-admin/faculty-resources.php">Faculty Apps</a>
+        <a class="nav-link base-link pl-5" href="/student-apps/apps.php">Student Apps</a>
+    </div>
+    {% if current_user.is_authenticated %}
+    <a class="nav-link base-btn logout-btn drawer-bookmark" href="#">Logout <i class="fas fa-sign-out-alt width-16 text-center"></i></a>
+    {% else %}
+    <a class="nav-link base-btn drawer-bookmark" href="{{ root_path }}login">Login <i class="fas fa-sign-in-alt width-16 text-center"></i></a>
+    {% endif %}
+</div>

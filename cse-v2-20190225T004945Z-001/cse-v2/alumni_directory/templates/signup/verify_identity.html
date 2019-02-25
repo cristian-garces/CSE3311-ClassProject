@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block page_title %}CSE Apps | Alumni Directory{% endblock %}
+{% block custom_css %}
+{% endblock %}
+{% block content %}
+
+<div class="container" id="login-box">
+    <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+    <hr class="my-4">
+    
+    <h4>Go back to the <a href="{{ url_for('AlumniDirectoryApp:index') }}">Alumni Directory</a></h4>
+        
+    
+    <hr class="my-4">
+        
+    <h3>Since we don't have your name in our database or we don't have a working email address of yours on file, please provide the following information for us to verify you are a CSE alumnus. We will follow up using the email you provide below.</h3>
+
+    <br><br>
+
+    <form class="container" enctype="multipart/form-data" method="POST" action="{{ url_for('AlumniDirectoryApp:signup_submit_docs')}}">
+        <div class="form-group">
+
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0 ui search search_new_user">
+                    <label for="alumnus-name">Name</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend p-abs">
+                            <span class="input-group-text" id="search-icon"><i class="search icon"></i></span>
+                        </div>
+                        <input type="text" class="form-control prompt search-prompt" id="alumnus_name" name="alumnus_name" placeholder="Please type in your Name" aria-label="Search" aria-describedby="search-icon"
+                        autocomplete="new-password" required>
+                    </div>
+                    <div class="results search-results"></div>
+                </div>
+                <br>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0">
+                    <label for="user_id">10-digit UTA ID Number</label>
+                    <input type="text" class="form-control" id="selected_user_id" name="selected_user_id" placeholder="" autocomplete="none" required style="background-color: #ddd; background-image: linear-gradient(0deg,#ddd 2px,rgba(0,150,136,0) 0), linear-gradient(0deg,rgba(0,0,0,.26) 1px,transparent 0) !important;">
+                </div>
+
+                <div class="col-md-4 mb-3 pl-0">
+                    <label for="user_id">UTA NetID</label>
+                    <input type="text" class="form-control" id="selected_user_net_id" name="selected_user_net_id" placeholder="" autocomplete="none" required style="background-color: #ddd; background-image: linear-gradient(0deg,#ddd 2px,rgba(0,150,136,0) 0), linear-gradient(0deg,rgba(0,0,0,.26) 1px,transparent 0) !important;">
+                </div>
+
+                <br>
+            </div>
+
+            <br><br>
+
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0">
+                    <label for="email">Contact Email</label>
+                    <div class="input-group">
+                        <input type="email" class="form-control prompt search-prompt" id="alt_email" 
+                        name="alt_email" placeholder="Please input your email" aria-label="Search" aria-describedby="search-icon" required>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-md-4 mb-3 pl-0"></div>
+                    <p>
+                    <label class="base-link" for="no-id-switch"><i class="fas fa-asterisk"></i> The email address that we can use to contact you about the outcome of this request.</label>
+                    </p>
+                </div>
+            </div>
+
+            <br><br>
+
+            <div class="row">
+                <div class="col-md-4 mb-3 pl-0">
+                    <div id="upload_doc">
+                        <input class="btn btn-primary base-btn float-left" id="upload_button" type="file" name="certificate_copy" accept="image/*, .pdf" required>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 pl-0"></div>
+                    <p>
+                        <label class="base-link" for="upload_button"><i class="fas fa-asterisk"></i> For us to verify your identity, please upload a photo/scanned copy of your degree certificate.</label>
+                    </p>
+                </div>
+            </div>
+
+            <br><br>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <input class="btn btn-primary base-btn float-left" id="submit_button" type="submit" value="submit">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+<div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+
+{% endblock %}
+
+{% block custom_js_import %}
+<script type='text/javascript'>
+
+//ref: https://gist.github.com/victorbstan/1188754
+$('button#submit_button').click(function(event){
+    console.log("here")
+    $('.required').each(function(i, el){
+        var data = $(el).val();
+        console.log(i + ': ' + data);
+        var len = data.length;
+        
+        if (len < 1) {
+            alert("Please enter your Email address!")
+            event.preventDefault();
+            return;
+        }
+    });
+
+});
+
+
+</script>
+
+
+{% endblock %}
+

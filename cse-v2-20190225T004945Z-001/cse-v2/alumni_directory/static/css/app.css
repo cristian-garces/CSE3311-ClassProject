@@ -1,0 +1,203 @@
+a {
+    color: #00447c;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #004F8F;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #AF5108;
+    cursor: pointer;
+}
+
+html {
+    min-width: 550px;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    color: #fff;
+    background: #004f8f url("/cse-v2/alumni_directory/static/assets/bg_body.png") repeat-x center top;
+    font-size: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    min-width: 550px;
+    min-height: 100% !important;
+    width: 100%;
+    height: auto;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    overflow: auto !important;
+}
+
+body ::-webkit-scrollbar {
+    background-color: #e9ecef;
+}
+
+.breadcrumb {
+    background-color: #ffffff;
+}
+
+.card {
+    transition: box-shadow 150ms ease-in;
+}
+
+.card:hover {
+    box-shadow: 0 1px 3px rgba(8, 81, 140, 0.85);
+}
+
+.card a {
+    text-decoration: none;
+}
+
+.alumni-photo {
+    width: 125px;
+    height: 125px;
+}
+
+.card-footer {
+    text-align: center;
+}
+
+.select-filter {
+    width: 130px;
+    margin-right: 1.85rem;
+}
+
+.rs-container .rs-selected {
+    background-color: #004f8f !important;
+    border: 1px solid #004f8f !important;
+}
+
+.custom-file-control, .form-control, .is-focused .custom-file-control, .is-focused .form-control {
+    background-image: linear-gradient(0deg,#004f8f 2px,rgba(0,150,136,0) 0), linear-gradient(0deg,rgba(0,0,0,.26) 1px,transparent 0) !important;
+}
+
+.badge-primary {
+    color: #fff;
+    background-color: #004f8f;
+}
+
+header#page-header {
+    max-width: 1000px;
+    width: 90%;
+    margin: 0 auto 0 auto;
+}
+
+#logo {
+    margin: 10px 0 10px 0;
+    max-width: 95%;
+}
+
+.content {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+}
+
+main.content {
+    min-height: 200px;
+}
+
+#top-line {
+    max-width: 1000px;
+    width: 90%;
+    padding: 0 1.04166666% 0 1.04166666%;
+    margin: 5px auto 0 auto;
+    background-color: #FFF;
+    height: 7px;
+}
+
+#inner-content-wrapper {
+    min-height: calc(100vh - 138px);
+    max-width: 1000px;
+    width: 90%;
+    padding: 10px 1.04166666% 20px 1.04166666%;
+    margin: 0 auto 10px auto;
+    background-color: #FFF;
+    color: black;
+    border-top: 5px solid #f58025;
+    border-bottom: 5px solid #f58025;
+}
+
+#inner-content-wrapper > div.container {
+    min-height: calc(100vh - 270px);
+}
+
+footer {
+    font-size: 115%;
+    clear: both;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #00447c;
+}
+
+#footer-extra {
+    line-height: 125%;
+    float: right;
+    padding-top: 0px;
+    text-align: right;
+    width: 25%;
+    font-size: 80%;
+}
+
+footer img {
+    float: left;
+    margin: 0 10px 0 5px;
+}
+
+footer p {
+    line-height: 140%;
+    font-size: 80%;
+    margin-bottom: 0;
+    margin-left: 5px;
+}
+
+footer p strong, footer p b {
+    font-weight: bold;
+}
+
+.print-only {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .container > .row > .col-lg-3 {
+        max-width: 23.4%;
+    }
+}
+
+@media (max-width: 767px) {
+    .jumbotron > .container > .display-3 {
+        font-size: 3.2rem;
+        text-align: center;
+    }
+
+    .jumbotron > .container > .lead {
+        text-align: center;
+    }
+}
+
+#alumni_first_name {
+    padding-left: 20px;
+}
+
+#find_alumni_response {
+    padding-top: 40px;
+}
+
+#submit_button {
+    width: 15%;
+    margin: 5px 0 0 1%;
+    border: 1px solid rgb(0, 100, 177);
+    background-color: rgb(0, 100, 177);
+    color: white;
+}

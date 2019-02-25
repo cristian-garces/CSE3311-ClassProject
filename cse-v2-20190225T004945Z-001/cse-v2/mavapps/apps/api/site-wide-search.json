@@ -1,0 +1,63 @@
+{
+  "reimbursement": {
+    "keywords": [
+      "refund",
+      "reimbursement",
+      "repayment",
+      "money back"
+    ],
+    "url": "reimbursement/",
+    "description": "Request or track reimbursements.",
+    "must_login": true,
+    "access_roles": [
+      "FAC",
+      "FINANCE",
+      "DEV",
+      "SADM"
+    ]
+  },
+  "role_management": {
+    "keywords": [
+      "manage roles",
+      "role management",
+      "user roles",
+      "roles"
+    ],
+    "url": "role_management/",
+    "description": "Manage user roles.",
+    "must_login": true,
+    "access_roles": [
+      "DEV",
+      "SADM"
+    ]
+  },
+  "alumni_directory": {
+    "keywords": [
+      "alumni",
+      "alumni directory",
+      "graduated",
+      "ex student"
+    ],
+    "url": "alumni_directory/",
+    "description": "Get in touch with alumni.",
+    "must_login": false,
+    "access_roles": [
+      "DEV"
+    ]
+  },
+  "help": {
+    "keywords": [
+      "help",
+      "contact admin",
+      "cse webmaster",
+      "webmaster",
+      "contact"
+    ],
+    "url": "mailto:webmaster-cse@uta.edu",
+    "description": "Contact the webmaster for help.",
+    "must_login": false,
+    "access_roles": [
+      "ANY"
+    ]
+  }
+}

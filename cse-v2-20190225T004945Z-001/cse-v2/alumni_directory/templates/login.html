@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block page_title %}Alumni Directory | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}?gh_v={{ git_hash }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}?gh_v={{ git_hash }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+
+{% endblock %}
+{% block content %}
+
+    {% if not first_time_login %}
+
+        <div class="container" id="login-box">
+            <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+            <hr class="my-4">
+            
+            <h3>Go back to the <a href="/mavapps-dev/alumni_directory/">Alumni Directory</a></h3>
+            
+            <hr class="my-4">
+        
+            <h3>You are about to edit the information of <b>{{ alumni_name }}</b>. If that's not you, please <a href="../../../..">go back</a> and identify your correct profile.</h3>
+            <br>
+            <h3>We use third-party login provided by Facebook / Google / LinkedIn such that only you can edit your own information on CSE Alumni Directory. For it to work, we request that you go through the following two steps.</h3>
+            <hr class="my-4">
+            <form id="login-form">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-8">
+                                <div class="card">
+                                        <div class="card-header">
+                                        <h2>Step 1 Register (one-time action)</h2>
+                                        </div>
+                                        <div class="card-body">
+                                          <h3 class="card-title instruction-list">Click the <b>Register</b> button and follow the instructions. This step collects your email address associated with the Facebook / Google / LinkedIn account that you will use for third-party login.</h3>
+                                          <p class="card-text">
+                                              <ul class="instruction-list">
+                                                  <li>If you have already finished this step, please proceed to Step 2.</li>
+                                                  <li>If you are not sure if you have finished this step, you can redo it. Just click the Register button.</li>
+                                                  <li>If you finished this in the past but you want to use the email address associated with a different Facebook / Google / LinkedIn account, just redo this step. Click the Register button.</li>
+                                              </ul>
+                                          </p>
+                                        </div>
+                                      </div>
+                        </div>
+                        <div class="col">
+                            <center>
+                                <button onclick=location.href="{{ url_for('AlumniDirectoryApp:alum_dir_init_signup') }}"  style="white-space: normal;" class="loginBtn loginBtn--signup" type="button">
+                                    Register
+                                </button>
+                            </center> 
+                        </div>
+                    </div>
+
+                    <hr><hr class="my-4">
+                    <div class="row">
+                        <div class="col-8">
+                                <div class="card">
+                                        <div class="card-header">
+                                            <h2>Step 2 Log In</h2>
+                                        </div>
+                                        <div class="card-body">
+                                          <h3 class="card-title instruction-list">Once you finished Step 1, you will be able to log in with Facebook / Google / LinkedIn.</h3>
+                                        </div>
+                                      </div>
+                        </div>
+                        <div class="col">
+                            <center>
+                                <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='facebook', email_token=social_email_token) }}" class="loginBtn loginBtn--facebook" type="button">
+                                    Login with Facebook
+                                </button>
+                            </center>
+        
+                            <br>
+                            <center>
+                                <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='google', email_token=social_email_token) }}"  class="loginBtn loginBtn--google" type="button">
+                                    Login with Google
+                                </button>
+                            </center>
+
+                            <center>
+                                <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='linkedin', email_token=social_email_token) }}"  class="loginBtn btn-primary loginBtn--linkedin" type="button">
+                                    Login with LinkedIn
+                                </button>
+                            </center>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                </div>
+            </form>
+        </div>
+
+    {% else %}
+    <!-- to-do: modify links to take to separate sign-up route -->
+    <div class="container" id="login-box">
+        <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+        <hr class="my-4">
+
+        <h3 style="text-align: justify; text-justify: inter-word;">
+            Welcome to the registration page of CSE Alumni Directory. We use third-party login provided by Facebook / Google / LinkedIn to handle user login and registration. To complete the registration process, please <b>select one of the services below</b> and follow it's accompanying instructions. Please remember that the email address associated with whichever service you select must match the email address you entered earlier as your "Social Login" email.
+        </h3>
+        <hr class="my-4">
+
+        <form id="login-form">
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Facebook Registration</h2>
+                            </div>
+                            <div class="card-body">
+                            <h3 class="card-title instruction-list">
+                                To register with Facebook, first click on the "Register with Facebook" button then follow the instructions below.
+                            </h3>
+                            <p class="card-text">
+                                <ul class="instruction-list">
+                                    <li>Enter your user name and password.</li>
+                                    <li>When asked to give permission for us to use your password, please say yes. Otherwise, you will be unable to complete the registration process.</li>
+                                </ul>
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <center>
+                            <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='facebook', email_token=social_email_token) }}" class="loginBtn loginBtn--facebook--nomargintop" type="button">
+                                Register with Facebook
+                            </button>
+                        </center>
+                    </div>
+                </div>
+                <hr><hr>
+                
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Google Registration</h2>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title instruction-list">
+                                    To register with Google, first click on the "Register with Google" button then follow the instructions below.
+                                </h3>
+                                <p class="card-text">
+                                    <ul class="instruction-list">
+                                        <li>If prompted to select from a list of Google accounts, please select the one with an email address that matches your "Social Login" email.</li>
+                                        <li>If prompted to log into the/your google account, please do so.</li>
+                                        <li>You may be asked to give permission to Alumni Directory to view your email. Please do so.</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <center>
+                            <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='google', email_token=social_email_token) }}"  class="loginBtn loginBtn--google" type="button">
+                                Register with Google
+                            </button>
+                        </center>                       
+                    </div>
+                </div>
+
+                <hr>
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>LinkedIn Registration</h2>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title instruction-list">
+                                    To register with LinkedIn, first click on the "Register with LinkedIn" button then follow the instructions below.
+                                </h3>
+                                <p class="card-text">
+                                    <ul class="instruction-list">
+                                        <li>Enter your user name and password.</li>
+                                        <li>When asked to give permission for us to use your password, please say yes. Otherwise, you will be unable to complete the registration process.</li> 
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <center>
+                            <button onclick=location.href="{{ url_for('AlumniDirectoryApp:oauth_authorize', provider='linkedin', email_token=social_email_token) }}"  class="loginBtn btn-primary" type="button">
+                                Register with LinkedIn
+                            </button>
+                        </center>                       
+                    </div>
+                </div>
+
+
+                <hr>
+            </div>
+        </form>        
+
+    </div>
+    {% endif %}
+
+
+{% endblock %}
+{% block custom_js_import %}
+    <script src="{{ url_for("static", filename="js/login.js") }}?gh_v={{ git_hash }}"></script>
+{% endblock %}

@@ -1,0 +1,16 @@
+<!-- <ul class="list-unstyled list-group" id="alum_div">
+    /%for alum in matching_alumni /%
+
+        <li><a href="#" class="list-group-item list-group-item-action" data-toggle="list">// alum.first_name // //alum.last_name //( // alum.net_id // )</a></li>
+
+    /%  endfor /%
+</ul> -->
+
+<select class="form-control" id="alum_div" name="alum_choice">
+    {% for i in range(matching_alumni|length ) %}
+
+        <option value="{{matching_alumni[i].net_id}}"> {{matching_alumni[i].first_name}} {{matching_alumni[i].last_name}} </option>
+
+    {% endfor %}
+</select>
+

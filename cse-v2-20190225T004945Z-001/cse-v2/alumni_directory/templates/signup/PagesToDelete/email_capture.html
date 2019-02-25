@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block page_title %}Alumni Directory | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}?gh_v={{ git_hash }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}?gh_v={{ git_hash }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+
+{% endblock %}
+{% block content %}
+
+<div class="container" id="login-box">
+    <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+    <hr class="my-4">
+    
+    <h3>Go back to the <a href="/mavapps-dev/alumni_directory/">Alumni Directory</a></h3>
+    
+    <hr class="my-4">
+    
+    <h3>We use third-party social login provided by Facebook / Google / LinkedIn such that only you can edit your own information on CSE Alumni Directory. Please enter below the email address associated with the social media account that you want to use.</h3>
+    <br>
+
+    <form class="container" action="{{ url_for('AlumniDirectoryApp:signup_email_capture')}}" method="POST">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="input-group">
+                    <input type="email" placeholder="email address of your social media account" class="form-control prompt search-prompt" id="social_email" name="social_email" aria-label="Search" aria-describedby="search-icon" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <input class="btn btn-primary base-btn float-left" id="submit_button" type="submit" value="submit">
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+{% block custom_js_import %}
+    <script src="{{ url_for("static", filename="js/login.js") }}?gh_v={{ git_hash }}"></script>
+{% endblock %}

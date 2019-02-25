@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+{% block page_title %}CSE Apps | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/main/login.{0}.css".format(git_hash)) }}">
+{% endblock %}
+{% block navbar %}{% include 'main/navbar.html' %}{% endblock %}
+{% block content %}
+    <div class="jumbotron" id="login-box">
+        <h1 class="display-3">CSE <i class="uta-dark-blue not-italic">Mav</i><i class="uta-orange">Apps</i></h1>
+        <p class="lead">Welcome! Login below to access faculty and student applications.</p>
+        <hr class="my-4">
+        <form id="login-form">
+            <div class="form-group">
+                <label for="netid">UTA NetID</label>
+                <input type="text" class="form-control" id="netid" name="netid" aria-describedby="netidHelp"
+                       placeholder="Enter your NetID">
+                <small id="netidHelp" class="form-text text-muted">Forgot your NetID? <a class="base-link"
+                        href="https://netidss.uta.edu/sspr/public/forgottenusername">Retrieve NetID</a></small>
+            </div>
+            <div class="form-group">
+                <label for="password">UTA NetID Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                       aria-describedby="passwordHelp"
+                       placeholder="Enter your NetID password">
+                <small id="passwordHelp" class="form-text text-muted">Forgot your password? <a class="base-link"
+                        href="https://netidss.uta.edu/sspr/public/forgottenpassword">Change password</a>
+                </small>
+            </div>
+            <button type="button" class="btn btn-primary base-btn" id="show-pass">
+                Password <i class="fas fa-eye ml-2"></i>
+            </button>
+            <button type="submit" class="btn btn-primary base-btn" id="submit-btn">
+                Login <i class="fas fa-sign-in-alt ml-2" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+{% endblock %}
+{% block custom_js_import %}
+    <script src="{{ url_for("static", filename="js/main/login.{0}.js".format(git_hash)) }}"></script>
+{% endblock %}

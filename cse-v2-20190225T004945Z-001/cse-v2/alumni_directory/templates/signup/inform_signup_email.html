@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block page_title %}Alumni Directory | Login{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="login-box">
+        <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+        <hr class="my-4">
+        
+        <h3>Go back to the <a href="{{ url_for('AlumniDirectoryApp:index') }}">Alumni Directory</a></h3>
+            
+        <hr class="my-4">
+
+        {% if alumnus_email %}
+        <h3>
+            An instruction email on how to proceed containing a link has been sent to <b style="font-weight: bold;">{{alumnus_email}}</b>. This is the email address of yours that we have on file. <b>Please click on the link in the email within 24 hours</b>. If it is past 24 hours, please go back to the previous page (your profile in the CSE alumni directory) and click the Edit Profile button again.
+        </h3>
+        <br>
+
+        <h3>
+            <ul>
+                <li>If you can't find the email in your inbox, please check the junk/spam folder.</li>
+                <li>If you can't find the email in the junk/spam folder either, please go back to the previous page and try once again by clicking the Edit Profile button.</li>
+                <li>If you still don't receive the email, please <a href="mailto:webmaster-cse@uta.edu?Subject=CSE%20Alumni%20Directory%20Registration" target="_top">email us</a>.</li>
+                <li>If you don't have access to this email address anymore, please proceed with manual registration by clicking on the button below.</li>
+            </ul>
+        </h3>
+        <br><br>
+
+        {% else %}
+
+        <h3>
+            It appears the user associated with this profile: {{alumnus_name}}, does not currently have an email address in our system. If you are the mentioned user, and wish to edit your profile, please click on the "Manual Registration" below.
+        </h3>
+        <br>
+        <br><br>
+
+        {% endif %}
+
+        <form method='POST' action="{{ url_for('AlumniDirectoryApp:alum_dir_init_signup') }}">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-raised">Manual Registration</button>
+            </div>
+        </form>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+{% block page_title %}CSE Apps | CSE Talks{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/kt-2.3.2/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.css"/>
+<link rel="stylesheet" href="{{ url_for("static", filename="css/cse_talks/app.{0}.css".format(git_hash)) }}">
+{% endblock %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container align-middle">
+        <h1 class="display-3 ml-3 my-3"><i class="fas fa-clipboard-check"></i> CSE Talks</h1>
+        <p class="lead ml-3" id="role-description"><i class="fas fa-info-circle mr-2"></i> Scroll over any column head to see it's description here</p>
+        <hr class="my-4 mx-3">
+        <table id="user_table" class="table table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th><i class="far fa-check-square"></i></th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js_import %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/kt-2.3.2/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="js/cse_talks/app.{0}.js".format(git_hash)) }}"></script>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+<header>
+    <div class="navbar navbar-light d-flex justify-content-between">
+        {% if current_user.is_authenticated %}
+        <div class="dropdown" id="user-photo-menu">
+            <img class="user-photo dropdown-toggle btn btn-primary mx-0 p-0" src="data:;base64,{{ user_photo }}" id="userPhotoDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" alt="User Menu"/>
+            <div class="dropdown-menu" aria-labelledby="userPhotoDropdownMenu">
+                <a class="nav-link base-link logout-btn dropdown-item" href="#">Logout <i class="fas fa-sign-out-alt width-16 text-center"></i></a>
+            </div>
+        </div>
+        {% else %}
+        <a class="nav-link base-btn br-125r" href="{{ root_path }}login">Login <i class="fas fa-sign-in-alt width-16 text-center"></i></a>
+        {% endif %}
+        <div class="search ui site-wide-search">
+            <div class="input-group">
+                <input type="text" class="form-control prompt search-prompt" id="site-wide-search-input" placeholder="Search MavApps" aria-label="Search" aria-describedby="search-icon">
+            </div>
+            <div class="results search-results"></div>
+        </div>
+        <button class="btn btn-sm base-btn" id="main-site-drawer-toggle" type="button" data-toggle="drawer" data-target="#main-site-drawer">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>

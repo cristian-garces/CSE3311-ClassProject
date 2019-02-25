@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block page_title %}CSE Apps | Alumni Directory{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+    <hr class="my-4">
+
+	<h4>Go back to the <a href="{{ url_for('AlumniDirectoryApp:index') }}">Alumni Directory</a></h4>
+
+    <hr class="my-4">
+
+    <div class="row col-md-12">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="pull-left">
+              {{ alumnus.name }}
+              <!-- <a href="../user/edit/{{ alumnus.id }}" class="pull-right btn btn-danger">Edit Profile</a> -->
+              <a href="../user/edit_request/login/{{ alumnus.id }}" class="pull-right btn btn-danger">Edit Profile</a>
+
+            </h2>
+
+
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-2 align-left text-center">
+                <img src="data:;base64,{{ alumnus.photo }}" alt="{{ alumnus.first_name }} {{ alumnus.last_name }}"
+                class="alumni-photo img-responsive rounded-circle" />
+              </div>
+
+              {% if "LO" in alumnus.public_area %}
+              <div class="col-md-4 align-left">
+                <h5 class="card-title" id="alumnus-country"></h5>
+                <h5 class="card-title" id="alumnus-state"></h5>
+              </div>
+              {% endif %}
+
+              <div class="col-md-4 align-left">
+                {% if "ER" in alumnus.public_area %}
+                <h5 class="card-title" style="color: rgb(8, 81, 140);font-weight: bold">Current Employer</h5>
+                <p class="card-text" style="font-size: medium;">{{ alumnus.company }}</p>
+                {% endif %}
+
+                {% if "TT" in alumnus.public_area %}
+                <h5 class="card-title" style="color: rgb(8, 81, 140);font-weight: bold">Current Title</h5>
+                <p class="card-text" style="font-size: medium;">{{ alumnus.title }}</p>
+                {% endif %}
+              </div>
+
+              {% if "EL" in alumnus.public_area or "TW" in alumnus.public_area or "FB" in alumnus.public_area or "LI" in alumnus.public_area%}
+              <div class="col-md-2 align-left">
+                <h5 class="card-title" style="color: rgb(8, 81, 140);font-weight: bold">Connect on:</h5>
+
+                {% if "EL" in alumnus.public_area %}
+                <a class="btn btn-social-icon btn-twitter" href="mailto:{{ alumnus.email }}">
+                  <i class="fas fa-envelope" style="font-size:2em;"></i>
+                </a>
+                {% endif %}
+
+                {% if "TW" in alumnus.public_area %}
+                <a class="btn btn-social-icon btn-twitter" href="{{ alumnus.twitter }}">
+                  <i class="fab fa-twitter" style="font-size:2em;"></i>
+                </a>
+                {% endif %}
+
+                {% if "FB" in alumnus.public_area %}
+                <a class="btn btn-social-icon btn-facebook" href="{{ alumnus.facebook }}">
+                    <i class="fab fa-facebook" style="font-size:2em;"></i>
+                </a>
+                {% endif %}
+
+                {% if "LI" in alumnus.public_area %}
+                <a class="btn btn-social-icon btn-twitter" href="{{ alumnus.linkedIn }}">
+                    <i class="fab fa-linkedin" style="font-size:2em;"></i>
+                </a>
+                {% endif %}
+              </div>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if "BI" in alumnus.public_area %}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" style="color: rgb(8, 81, 140);font-weight: bold">Biography</h5>
+            <p class="card-text" style="font-size: medium;">{{ alumnus.biography }}</p>
+          </div>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block custom_js_import %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            //current location
+            $.getJSON("{{ url_for("static", filename="assets/dropdownlist.json") }}", function( data ) {
+                var countries = data["Country"];
+                var states = data["State"];
+
+                $("#alumnus-country").append(countries["{{ alumnus.country }}"]);
+
+                if("{{ alumnus.country }}" == "USA"){
+                  $("#alumnus-state").append(states["{{ alumnus.state }}"]);
+                }
+            });
+        });
+    </script>
+{% endblock %}

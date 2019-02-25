@@ -1,0 +1,40 @@
+{% extends "messages/index.html" %}
+{% block page_title %}CSE Apps | Messages{% endblock %}
+{% block received_messages_link %}../received/{% endblock %}
+{% block sent_messages_link %}../sent/{% endblock %}
+{% block messages_container %}
+    <div class="container align-middle">
+        <ul class="list-group">
+        {% for message in data.messages %}
+            <li class="list-group-item bg-dark uta-blue-bg my-2" message-id="{{ message.id }}">
+                <i class="far fa-square mx-2"></i>
+                {{ message.title }}
+                {{ message.body }}
+                {{ message.timestamp }}
+                {% if message.is_new %}<i class="far fa-circle text-light mr-0 float-right"></i>{% else %}<i class="far fa-check-circle text-success mr-0"></i>{% endif %}
+            </li>
+        {%  endfor %}
+        </ul>
+    </div>
+    <div class="pagination justify-content-center fw-600">
+    {% if data.pagination.prev_num %}
+        <a class="base-link mx-2" href="{{ url_for(endpoint, page=data.pagination.prev_num) }}"><i class="fas fa-angle-left"></i></a>
+    {% endif %}
+    {% for page in data.pagination.iter_pages() %}
+        {% if page %}
+            {% if page != data.pagination.page %}
+                <a class="base-link mx-2" href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+            {% else %}
+                <li class="not-italic mx-2 uta-orange">{{ page }}</li>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis><i class="fas fa-ellipsis-h uta-orange" data-fa-transform="shrink-4 down-4"></i></span>
+        {% endif %}
+    {%- endfor %}
+    {% if data.pagination.next_num %}
+        <a class="base-link mx-2" href="{{ url_for(endpoint, page=data.pagination.next_num) }}"><i class="fas fa-angle-right"></i></a>
+    {% endif %}
+    </div>
+{% endblock %}
+{% block custom_js_import %}
+{% endblock %}

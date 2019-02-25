@@ -1,0 +1,343 @@
+{% extends "reimbursement/index.html" %}
+{% block new_request_link %}../../new/request/{% endblock %}
+{% block view_requests_link %}../requests/{% endblock %}
+{% block reimbursement_type_title %} | General{% endblock %}
+{% block before_drawer %}
+<div id="request-history-modals">
+    {% include "reimbursement/request_history.html" %}
+</div>
+{% endblock %}
+{% block user_forms %}
+    <div class="container list-group">
+        {% for upload in uploads if ((upload.request_returned == true or upload.request_saved == true) and user_roles.STFADM == false) or (upload.request_returned == false and upload.request_saved == false) %}
+        {% if loop.first %}
+        <form class="ui form my-3 search-requests-form" action="../requests/search" method="get">
+            <div class="fields">
+                <div class="ten wide field pt-3" id="request-search-query-div">
+                    <label class="fs-1em ff-roboto text-shadow-light">Query</label>
+                    <input type="text" name="query" placeholder="Search by name, id, title, notes etc.">
+                </div>
+                <div class="two wide field pt-3">
+                    <label class="fs-1em ff-roboto text-shadow-light">Sort By</label>
+                    <div class="field">
+                        <select class="ui fluid search dropdown" name="sort-by">
+                            <option value="date">Date</option>
+                            <option value="amount">Amount</option>
+                            <option value="activity">Activity</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two wide field pt-3">
+                    <label class="fs-1em ff-roboto text-shadow-light">Direction</label>
+                    <div class="field">
+                        <select class="ui fluid search dropdown" name="sort-direction">
+                            <option value="descending" selected>Desc.</option>
+                            <option value="ascending">Asc.</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two wide field pt-3" id="request-search-submit-btn-div">
+                    <label class="fs-1em ff-roboto text-shadow-light"> </label>
+                    <button type="submit" class="btn btn-primary base-btn w-100"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <div class="hidden" id="request-advanced-search">
+                <div class="two fields pt-3">
+                    <div class="field">
+                        <label>Request Type</label>
+                        <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="request-type-list">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Type</div>
+                            <div class="menu">
+                                <div class="item" data-value="general" data-text="General">General</div>
+                                <div class="item" data-value="travel" data-text="Travel">Travel</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Request Status</label>
+                        <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="status-filter-list">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Status</div>
+                            <div class="menu">
+                                {% if user_roles.STFADM == false %}<div class="item" data-value="request_draft" data-text="Draft">Draft</div>{% endif %}
+                                <div class="item" data-value="request_submitted" data-text="Submitted">Submitted</div>
+                                <div class="item" data-value="request_processed" data-text="Processed">Processed</div>
+                                {% if user_roles.STFADM == false %}<div class="item" data-value="request_returned" data-text="Returned">Returned</div>{% endif %}
+                                <div class="item" data-value="request_voided" data-text="Voided">Voided</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="four wide field pt-3" id="request-search-after-date-div">
+                        <label for="after-date-filter">After Date (<i class="fas fa-greater-than-equal"></i>)</label>
+                        <div class="ui left icon input">
+                            <input type="text" class="datepicker" id="after-date-filter" name="after-date-filter" pattern="^[a-zA-Z]{3} [a-zA-Z]{3} \d{2} \d{4}" placeholder="e.g., Fri Dec 03 2049">
+                            <i class="calendar alternate outline icon"></i>
+                        </div>
+                    </div>
+                    <div class="four wide field pt-3">
+                        <label for="before-date-filter">Before Date (<i class="fas fa-less-than-equal"></i>)</label>
+                        <div class="ui left icon input">
+                            <input type="text" class="datepicker" id="before-date-filter" name="before-date-filter" pattern="^[a-zA-Z]{3} [a-zA-Z]{3} \d{2} \d{4}" placeholder="e.g., Sun Dec 12 2049">
+                            <i class="calendar alternate outline icon"></i>
+                        </div>
+                    </div>
+                    <div class="four wide field pt-3">
+                        <label for="ge-amount-filter">Amount (<i class="fas fa-greater-than-equal"></i>)</label>
+                        <div class="ui left icon input">
+                            <input type="number" id="ge-amount-filter" name="ge-amount-filter" min="0" step="0.01" pattern="^\d*(\.\d{0,2})?$" placeholder="0.00">
+                            <i class="dollar sign icon"></i>
+                        </div>
+                    </div>
+                    <div class="four wide field pt-3">
+                        <label for="le-amount-filter">Amount (<i class="fas fa-less-than-equal"></i>)</label>
+                        <div class="ui left icon input">
+                            <input type="number" id="le-amount-filter" name="le-amount-filter" min="0" step="0.01" pattern="^\d*(\.\d{0,2})?$" placeholder="0.00">
+                            <i class="dollar sign icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="requests-advanced-search-btn" class="btn btn-link base-link float-right">Open Advanced Search <i class="fas fa-level-down-alt"></i></button>
+        </form>
+        <div class="row">
+            <div class="col-md-12 my-3">
+                <span class="badge badge-light view-requests-legend float-left pl-0">Click a request to view it, <i class="fas fa-download mx-1"></i> to download it, {% if user_roles.STFADM == true %}or <i class="far fa-file-pdf mx-1"></i> to download a summary.{% else %}<i class="far fa-file-pdf mx-1"></i> to download a summary, or <i class="fas fa-edit mx-1"></i> to edit it if returned.{% endif %}</span>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row px-3 ui accordion">
+            <div class="d-flex flex-row container-fluid justify-content-between px-0" id="view-request-menu">
+                <div class="col-md-6 col-sm-6 text-left px-0">
+                    {% if upload.request_voided == false and user_roles.STFADM == true%}
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button type="button" class="btn btn-link base-link-danger-alt request-process-btn"><i class="far {% if upload.request_processed == true %}fa-check-square{% else %}fa-square{% endif %}" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls {% if upload.request_processed == true %} d-none{% endif %}">
+                        <button type="button" class="btn btn-link base-link-danger-alt request-return-btn"><i class="fas fa-share-square" data-fa-transform="flip-h grow-6"></i></button>
+                    </div>
+                    {% endif %}
+                    {% if (upload.request_voided == false and upload.request_returned == true) or user_roles.STFADM == true %}
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls{% if upload.request_processed == true %} d-none{% endif %}">
+                        <button type="button" class="btn btn-link base-link-danger-alt request-void-btn"><i class="fas fa-ban" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    {% elif upload.request_processed == false and upload.request_saved == true and user_roles.STFADM == false %}
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button type="button" class="btn btn-link base-link-danger-alt request-delete-btn"><i class="fas fa-times" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 col-sm-6 text-right px-0">
+                    {% if upload.request_returned == true or upload.request_saved == true %}
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button role="button" class="btn btn-link base-link edit-request"><i class="fas fa-edit ml-1" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    {% else %}
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button role="button" class="btn btn-link base-link download-request"><i class="fas fa-download" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button role="button" class="btn btn-link base-link download-request-pdf"><i class="far fa-file-pdf" data-fa-transform="grow-6"></i></button>
+                    </div>
+                    <div class="col-md-2 col-sm-2 request-pr-rt-v-controls">
+                        <button role="button" class="btn btn-link base-link view-request-history"><i class="fas fa-history" data-fa-transform="grow-6" data-toggle="modal" data-target="#request-history-modal-{{ loop.index0 }}"></i></button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="{% if user_roles.STFADM == true %}col-md-12 re-resize-0{% else %}col-md-12{% endif %} col-sm-12 mb-3 px-0 request-div title" data-request-processed="{{ upload.request_processed|tojson }}" data-request-returned="{{ upload.request_returned|tojson }}">
+                <div class="confirm-delete">
+                    <div class="ui segment">
+                        <div class="ui two column very relaxed grid">
+                            <div class="column">
+                                <button type="button" class="p-0 btn btn-sm btn-link base-link-danger confirm-request-delete float-left">YES</button>
+                            </div>
+                            <div class="column">
+                                <button type="button" class="p-0 btn btn-sm btn-link base-link deny-request-delete float-right">NO</button>
+                            </div>
+                        </div>
+                        <div class="ui vertical divider">
+                            <h3>DELETE?</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="#request_{{ loop.index0 }}" id="request_link_{{ loop.index0 }}" class="list-group-item list-group-item-action flex-column align-items-start active text-shadow-light {% if upload.request_processed == true %}uta-orange-bg{% elif upload.request_returned == true %}request-returned{% elif upload.request_returned == false and upload.request_saved == true %}bg-success border-success{% elif upload.request_voided== true %}bg-secondary border-secondary{% else %}uta-blue-bg{% endif %}" role="button">
+                {% if upload.request_voided == true %}
+                <div class="request-void-text">VOID</div>
+                {% elif upload.request_saved == true and upload.request_returned == false %}
+                <div class="request-draft-text">DRAFT</div>
+                {% endif %}
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-2 fw-600">{{ upload.short_description }}</h5>
+                        <span class="badge badge-light mb-3">{{ '{0:02d}'.format(upload.request_date.month) }}/{{ '{0:02d}'.format(upload.request_date.day) }}/{{ '{0:04d}'.format(upload.request_date.year) }}</span>
+                    </div>
+                    <p class="mb-3">{% if upload.notes|trim == "" %}No notes provided.{% else %}{{ upload.notes|truncate(70, True, '…', 0) }}{% endif %}</p>
+                    <div id="request-badges-div">
+                        <span class="badge badge-light" id="request-total">${{ '{0:0.2f}'.format(upload.total_amount) }}</span>
+                        <span class="badge badge-light hidden" id="requester-name">{{ upload.requester.first_name }} {{ upload.requester.last_name }}</span>
+                        <span class="badge badge-light hidden" id="requester-net-id">{{ upload.requester.net_id }}</span>
+                        <span class="badge badge-light hidden" id="requester-account">{{ upload.account_number }}</span>
+                        <span class="badge badge-light hidden" id="request-payto">{{ upload.pay_to.name }}</span>
+                        <span class="badge badge-light hidden" id="request-year">{{ upload.request_date.year }}</span>
+                        <span class="badge badge-light hidden" id="request-month">{{ upload.request_date.month }}</span>
+                        <span class="badge badge-light hidden" id="request-day">{{ upload.request_date.day }}</span>
+                        <span class="badge badge-light hidden" id="request-id">{{ upload.folder_name }}</span>
+                    </div>
+                </a>
+            </div>
+            <div class="content w-100 my-3 pb-0" id="request_{{ loop.index0 }}">
+                <form class="container-fluid" action="#">
+                    {% if user_roles.STFADM == true %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="requester-name-{{ loop.index0 }}">Requester</label>
+                            <div class="input-group">
+                              <input type="text" id="requester-name-{{ loop.index0 }}" class="form-control" value="{{ upload.requester.first_name }} {{ upload.requester.last_name }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="requester-id-{{ loop.index0 }}">Requester 10-Digit ID Number</label>
+                            <div class="input-group">
+                              <input type="text" id="requester-id-{{ loop.index0 }}" class="form-control" value="{{ upload.requester.uta_id }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3 payto-cse-member">
+                            <label for="payee-name-{{ loop.index0 }}">Payee</label>
+                            <div class="input-group">
+                              <input type="text" id="payee-name-{{ loop.index0 }}" class="form-control" value="{{ upload.pay_to.name }}" disabled>
+                            </div>
+                        </div>
+                        {% if upload.external_payee == true %}
+                        <div class="col-md-6 mb-3 pl-0">
+                            <label for="payee-email-{{ loop.index0 }}">Payee Email</label>
+                            <input type="text" class="form-control" id="payee-email-{{ loop.index0 }}" value="{{ upload.pay_to.email }}" disabled>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6 mb-3 pay_to_selected payto-cse-member">
+                            <label for="payee-id-{{ loop.index0 }}">Payee 10-Digit ID Number</label>
+                            <input type="text" class="form-control" id="payee-id-{{ loop.index0 }}" value="{{ upload.pay_to.id }}" disabled>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="request-type-{{ loop.index0 }}">Request Type</label>
+                            <input type="text" class="form-control" id="request-type-{{ loop.index0 }}" value="{{ upload.request_type|capitalize }}" disabled>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="title-{{ loop.index0 }}">Request Title</label>
+                            <input type="text" class="form-control" id="title-{{ loop.index0 }}" value="{{ upload.short_description }}" disabled>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="account-{{ loop.index0 }}">PI Account</label>
+                            <input type="text" class="form-control" id="account-{{ loop.index0 }}" value="{{ upload.account_number }}{% if upload.account_description %}: {{ upload.account_description }}{% endif %}" disabled>
+                        </div>
+                    </div>
+                    {% if upload.request_type == "travel" %}
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="travel-from-{{ loop.index0 }}">Origin</label>
+                            <input type="text" class="form-control" id="travel-from-{{ loop.index0 }}" value="{{ upload.travel_from }}" disabled>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="travel-to-{{ loop.index0 }}">Destination</label>
+                            <input type="text" class="form-control" id="travel-to-{{ loop.index0 }}" value="{{ upload.travel_to }}" disabled>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="travel-from-date-{{ loop.index0 }}">Departing</label>
+                            <input type="text" class="form-control" id="travel-from-date-{{ loop.index0 }}" value="{{ upload.travel_from_date }}" disabled>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="travel-to-date-{{ loop.index0 }}">Returning</label>
+                            <input type="text" class="form-control" id="travel-to-date-{{ loop.index0 }}" value="{{ upload.travel_to_date }}" disabled>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="travel-number-{{ loop.index0 }}">Travel Number</label>
+                            <input type="text" class="form-control" id="travel-number-{{ loop.index0 }}" value="{{ upload.travel_number}}" disabled>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="event-website">Event Website</label>
+                            <input type="text" class="form-control" id="event-website" value="{{ upload.event_website|default("N\A") }}" disabled>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center justify-content-center mb-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="ctp-receipts-provided-checkbox" {% if upload.ctp_checkbox_checked|default(false) %}checked="checked"{% endif %} disabled="disabled">
+                                <label class="custom-control-label" for="ctp-receipts-provided-checkbox"><i class="fas fa-asterisk" data-fa-transform="shrink-6"></i> I’ve provided all e-receipts for expenses covered by the CTP UTA travel agent (e.g., air ticket, car rental, etc.).</label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3 pr-0">
+                            <label id="uploaded-files-list-label" for="uploaded-files-list-{{ loop.index0 }}">List of items<span class="badge badge-light transparent-bg float-right label-badge"><i class="fas fa-dollar-sign text-success mr-1" data-fa-transform="grow-2 down-1"></i><span class="badge badge-success text-shadow" id="current-total">{{ '{0:0.2f}'.format(upload.total_amount) }}</span></span></label>
+                            <div class="list-group" id="uploaded-files-list-{{ loop.index0 }}">
+                                <ul class="list-group">
+                                {% for file in upload.files %}
+                                    <li class="list-group-item list-group-item-action flex-column align-items-start active mb-2">
+                                        <div class="d-flex w-100 justify-content-between mb-2">
+                                            <h5>{{ file.short_name }}</h5>
+                                            <span class="badge badge-light margin-auto-0 no-margin-t">{{ file.label }}</span>
+                                        </div>
+                                        <p class="mb-2">{{ file.description|replace("\n", "<br>")|safe }}</p>
+                                        <button role="button" class="btn btn-link base-link-white download-file mb-2" file-name="{{ file.upload.filename }}"><i class="fas fa-download mr-0" data-fa-transform="grow-5"></i></button>
+                                        {% if file.dollar_amount > 0.0 %}
+                                        <p>Amount: <i class="not-italic text-success text-shadow">${{ '{0:0.2f}'.format(file.dollar_amount) }}</i></p>
+                                        {% else %}
+                                        <span class="badge badge-light margin-auto-0 no-margin-t">Auxiliary File</span>
+                                        {% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label id="special-notes-label-{{ loop.index0 }}" for="special-notes-{{ loop.index0 }}">Special notes</label>
+                            <textarea class="form-control no-resize" rows="10" id="special-notes-{{ loop.index0 }}" disabled>{{ upload.notes }}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if loop.last %}
+        <div class="row">
+            <div class="col-md-12 my-3">
+                <span class="badge badge-light uta-orange ml-1 view-requests-legend float-right pr-0"><i class="fas fa-square-full mr-1"></i> Processed</span>
+                {% if user_roles.STFADM == false %}
+                <span class="badge badge-light text-request-returned mx-1 view-requests-legend float-right"><i class="fas fa-square-full mr-1"></i> Returned</span>
+                <span class="badge badge-light text-success mx-1 view-requests-legend float-right"><i class="fas fa-square-full mr-1"></i> Draft</span>
+                {% endif %}
+                <span class="badge badge-light uta-blue mr-1 view-requests-legend float-right"><i class="fas fa-square-full mr-1"></i> Submitted</span>
+            </div>
+        </div>
+        <nav class="d-flex justify-content-center mt-3" aria-label="Page navigation">
+            <ul class="pagination">
+                {% if pagination.previous_index is not none %}
+                <li class="page-item"><a class="page-link" href="../{{ pagination.previous_index }}/"><i class="fas fa-angle-left"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-angle-left"></i></a></li>
+                {% endif %}
+                {% for n in range(pagination.first_page, pagination.last_page) %}
+                <li class="page-item {% if n == pagination.current_index %}active{% endif %}"><a class="page-link" href="../{{ n * pagination.number_displayed }}/">{{ n + 1 }}</a></li>
+                {% endfor %}
+                {% if pagination.next_index is not none %}
+                <li class="page-item"><a class="page-link" href="../{{ pagination.next_index }}/"><i class="fas fa-angle-right"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-angle-right"></i></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <span class="badge badge-pill badge-danger no-requests my-5">No Requests Found</span>
+        {% endfor %}
+    </div>
+{% endblock %}

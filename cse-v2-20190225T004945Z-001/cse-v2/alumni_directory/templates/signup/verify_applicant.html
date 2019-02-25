@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block page_title %}CSE Apps | Alumni Directory{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}?gh_v={{ git_hash }}">
+<link rel="stylesheet" href="{{ url_for("static", filename="css/social_login.css") }}?gh_v={{ git_hash }}">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+{% endblock %}
+
+{% block content %}
+{% if status_complete %}
+    
+    
+    <div class="jumbotron jumbotron-fluid">
+
+            <div>
+                <h3>Verify Applicant Details</h3><br><br>
+    
+    
+                {% for file in file_paths %}
+                <div>
+                <embed src="{{ url_for('AlumniDirectoryApp:get_account_docs', netID=alumni_netID, file_name=file) }}" type="application/pdf" width="100%" height="500">
+                {% endfor %}
+                </div>
+            </div>
+            <br><br>
+    
+            <div>
+
+                    <div class="row">
+                        <h1>Thank you.</h1>
+                    </div>
+                            <br>
+                    </div>
+                    <br>
+                    <hr>
+    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <a href="https://cse.uta.edu/" class="btn btn-primary base-btn float-right" type="button" value="Exit">Exit</a>
+                        </div>
+                    </div>
+    
+    
+            </div>
+    
+            <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+            <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+    
+        </div>
+
+    
+{% else %}
+    
+
+
+    <div class="jumbotron jumbotron-fluid">
+
+        <div>
+            <h3>Verify Applicant Details</h3><br><br>
+
+
+            {% for file in file_paths %}
+            <div>
+            <embed src="{{ url_for('AlumniDirectoryApp:get_account_docs', netID=alumni_netID, file_name=file) }}" type="application/pdf" width="100%" height="500">
+            {% endfor %}
+            </div>
+        </div>
+        <br><br>
+
+        <div>
+            <form class="container" method='POST' action="{{ url_for('AlumniDirectoryApp:signup_approve_docs', email_token =applicant_details['alt_email_token'], netID=applicant_details['netID'])}}">
+
+                <div class="row">
+                        <div class="col-md-4 mb-3 pl-0 ui search search_new_user">
+                            <label for="test-search">Applicant Details</label>
+                            <div>
+                                <ul>
+                                    <li>
+                                        Name: {{applicant_details["name"]}}
+                                    </li>
+                                    <li>
+                                        Net-ID: {{applicant_details["netID"]}}
+                                    </li>
+                                    <li>
+                                        Graduation year: {{applicant_details["grad_yr"]}}
+                                    </li>
+                                    <li>
+                                        Degree: {{applicant_details["degree"]}}
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                            
+                        </div>
+                        <br>
+                </div>
+                <br>
+                <hr>
+
+
+                
+                <div class="form-group"> 
+                    <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="on_record" checked>
+                        <label>
+                            <b>I approve this applicant's request.</b>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="not_on_record">
+                        <label>
+                            <b>I deny this applicant's request.</b>
+                        </label>
+                    </div>
+                    <br>
+                </div>
+                
+
+
+
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <input class="btn btn-primary base-btn float-right" id="submit_button" type="submit" value="submit">
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+        <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+        <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+    </div>
+    {% endif %}
+    {% endblock %}
+
+
+{% block custom_js_import %}
+{% endblock %}

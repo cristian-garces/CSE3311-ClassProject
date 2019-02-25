@@ -1,0 +1,143 @@
+.jumbotron {
+    width: 100%;
+    margin: 0;
+}
+.jumbotron > .container > .display-3 {
+    font-weight: 700;
+}
+
+.jumbotron > .container > .lead {
+    font-weight: 400;
+}
+
+.dropzone {
+    min-height: 200px;
+    border: 1px dashed rgba(0, 100, 177, 1);
+    border-radius: 0;
+    background: white;
+    padding: 20px 20px;
+    color: rgb(245, 128, 38);
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.app-menu-list {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.app-menu-list > li {
+    display: inline-block;
+    width: 32%;
+    padding: 0;
+    margin: 0 0.4%;
+    text-decoration: none;
+    color: #333;
+}
+
+.app-menu-list > li > a {
+    font-family: Oxygen, sans-serif;
+    font-weight: 600;
+    font-size: 1.33rem;
+    width: 100%;
+    padding: 0.75rem 0;
+}
+
+.app-menu-list > li {
+    border-bottom: .25rem solid rgba(255, 255, 255, 0.0);
+    transition: 150ms ease-in;
+}
+
+.app-menu-list > li:nth-child(1):hover {
+    border-bottom: .25rem solid rgba(245, 128, 38, 1);
+    transition: 150ms ease-out;
+}
+
+.app-menu-list > li:nth-child(2):hover {
+    border-bottom: .25rem solid rgba(245, 128, 38, 1);
+    transition: 150ms ease-out;
+}
+
+.app-menu-list > li:nth-child(3):hover {
+    border-bottom: .25rem solid rgba(245, 128, 38, 1);
+    transition: 150ms ease-out;
+}
+
+#message-composer {
+    background-color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.13);
+}
+.panel-heading.note-toolbar .dropdown-menu {
+    min-width: 100px;
+    width: fit-content;
+}
+
+.note-toolbar button {
+    font-size: 1rem;
+}
+
+.note-toolbar .btn.dropdown-toggle::before, .note-toolbar .btn.dropdown-toggle::after {
+    margin-left: unset;
+    margin-right: 0.8rem;
+}
+
+ul > hr {
+    height: .25rem;
+    width: 33%;
+    margin: 0 0 0 0.25%;
+    background: rgba(245, 128, 38, 0);
+    border: none;
+    transition: .3s ease-in-out;
+}
+
+@media (max-width: 767px) {
+    .container {
+        max-width: 90%;
+    }
+
+    .jumbotron > .container > h1 {
+        font-size: 3rem;
+        text-align: center;
+    }
+
+    .jumbotron > .container > p.lead {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .app-menu-list > li {
+        text-align: center;
+        display: inline;
+        border-bottom: .25rem solid rgba(245, 128, 38, 0);
+        padding-bottom: .85rem;
+        transition: 150ms ease-in;
+    }
+
+    .app-menu-list > li:nth-child(1) > div > a:hover {
+        width: 100%;
+        border-bottom: .25rem solid rgba(245, 128, 38, 1);
+        transition: 150ms ease-out;
+    }
+
+    .app-menu-list > li:nth-child(2):hover {
+        border-bottom: .25rem solid rgba(245, 128, 38, 1);
+        transition: 150ms ease-out;
+    }
+
+    .app-menu-list > li:nth-child(3):hover {
+        border-bottom: .25rem solid rgba(245, 128, 38, 1);
+        transition: 150ms ease-out;
+    }
+
+    ul > hr {
+        display: none;
+    }
+}

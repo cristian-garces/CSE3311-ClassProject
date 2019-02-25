@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% block custom_css %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/chosen.css") }}?gh_v={{ git_hash }}">
+<link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap-slider.css") }}?gh_v={{ git_hash }}">
+{% endblock %}
+{% block content %}
+
+<style type="text/css">
+#slider12c .slider-selection {
+    background: blue;
+}
+</style>
+
+<div class="container">
+    <h1 class="display-3"><i class="fas fa-address-book"></i> CSE Alumni Directory</h1>
+
+    <hr class="my-4">
+
+    <h3>
+        Search for a CSE alumnus and click at the card to see the alumnus profile. You can update your own information. If you can't find yourself in the directory, please click the button below to start the manual registration process.
+        <br><br>
+        <form method='POST' action="{{ url_for('AlumniDirectoryApp:alum_dir_init_signup') }}">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-raised">Manual Registration</button>
+            </div>
+        </form>
+    </h3>
+
+    <hr class="my-4">
+
+    <form class="container" action="" method="POST" id="searchForm">
+        <input type = "hidden" id="year-range" value = "{{ form_data.years }}">
+        <input type = "hidden" id="old-gradyear" value = "{{ form_data.gradyear }}">
+        <input type = "hidden" id="old-degree" value = "{{ form_data.degree }}">
+        <input type = "hidden" id="old-names" value = "{{ form_data.names }}">
+        <input type = "hidden" id="page-number" name="page-number">
+        <input type = "hidden" id="old_state" name="old_state" value = "{{ form_data.usstates }}">
+        <input type = "hidden" id="new_state" name="new_state">
+        <input type = "hidden" id="old_country" name="old_country" value = "{{ form_data.countries }}">
+        <input type = "hidden" id="new_country" name="new_country">
+
+        <div class="container-fluid">
+            <div class="row" style="font-size: large;">
+                <div class="col-md-2"  style="vertical-align: bottom;">
+                    <em>Name</em>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="names" name="names" placeholder='Enter first, middle or last name and press "Enter" to search' maxlength="100" style="background-color: white">
+                </div>
+            </div><br>
+            <div class="row" style="font-size: large;">
+                <div class="col-md-2"  style="vertical-align: bottom;">
+                    <em>Degree</em>
+                </div>
+                <div class="col-md-10">
+                     <select data-placeholder="Add one or more Degree" class="chosen-select" multiple id="degree" name="degree">
+                        <option value="BS">Bachelor's</option>
+                        <option value="MS">Master's</option>
+                        <option value="PHD">Phd</option>
+                    </select>
+                </div>
+            </div><br>
+            <div class="row" style="font-size: large;">
+                <div class="col-md-2"  style="vertical-align: bottom;">
+                    <em>Location</em>
+                </div>
+                <div class="col-md-10" id="locations">
+                     <button type="button" class="btn btn-primary btn-sm" style="font-size: large;" data-toggle="modal" data-target="#locationModal">+</button>
+                </div>
+            </div><br>
+            <div class="row" style="font-size: large;">
+                <div class="col-md-2"  style="vertical-align: bottom;">
+                    <em>Graduation</em>
+                </div>
+                <div class="col-md-10">
+                     <input id="gradyear" name="gradyear" style="width: 100%;text-align: right;"/>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr class="my-4">
+    <div class="pagination justify-content-center fw-600" style="font-size: medium;">
+
+    {% if pagination.prev_num %}
+        <a class="base-link mx-2" onclick="otherPage({{pagination.prev_num}})"><i class="fas fa-angle-left"></i></a>
+    {% endif %}
+
+    {% for page in pagination.iter_pages() %}
+        {% if page %}
+            {% if page != pagination.page %}
+                <a class="base-link mx-2" onclick="otherPage({{page}})">{{ page }}</a>
+            {% else %}
+                <li class="not-italic mx-2 uta-orange">{{ page }}</li>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis><i class="fas fa-ellipsis-h uta-orange" data-fa-transform="shrink-4 down-4"></i></span>
+        {% endif %}
+    {%- endfor %}
+
+    {% if pagination.next_num %}
+        <a class="base-link mx-2" onclick="otherPage({{pagination.next_num}})"><i class="fas fa-angle-right"></i></a>
+    {% endif %}
+
+        TOTAL: {{pagination.total}}
+    </div><br>
+
+    <div class="container">
+        <div class="row d-flex justify-content-around">
+            {% for alumnus in form_data.alumni %}
+            <div class="card col-md-12 col-lg-3 mb-4 mx-2 base-link">
+                <div class="card-body">
+                    <a href="view/user/{{ alumnus.id }}" target="_blank">
+                        <div class="d-flex justify-content-center">
+                            <img src="data:;base64,{{ alumnus.photo }}" alt="{{ alumnus.first_name }} {{ alumnus.last_name }}" class="alumni-photo img-responsive rounded-circle" />
+                        </div>
+                        {% set len = (alumnus.first_name ~ alumnus.last_name)|length %}
+                        {% if len <= 20 %}
+                            <h5 class="card-title mt-4 text-center" style="font-size: 150%;">
+                        {% else %}
+                            <h5 class="card-title mt-4 text-center" style="font-size: 120%;">
+                        {% endif %}
+                            {{ alumnus.first_name }} {{ alumnus.last_name }}
+                        </h5>
+
+                        <h6 class="card-title text-center" style="font-size: medium;font-weight: bold;">
+                            {% if alumnus.company is not none %}
+                                {{ alumnus.company }} </br>
+                            {% endif %}
+
+                            {% if alumnus.title is not none %}
+                                {{ alumnus.title }} </br>
+                            {% endif %}
+                        </h6>
+                    </a>
+                </div>
+
+                <div class="card-footer bg-transparent">
+                    {% if "EL" in alumnus.public_area %}
+                    <span>
+                        <a href="mailto:{{ alumnus.email }}">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </span><br>
+                    {% endif %}
+                    <span class="badge badge-primary uta-blue-bg" style="font-size:small;">
+                        <i class="fas fa-graduation-cap mr-1"></i>
+                        {{ alumnus.graduation_year }}<br>
+                        {{ alumnus.degree }}
+                    </span>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+
+<div class="pagination justify-content-center fw-600" style="font-size: medium;">
+{% if pagination.prev_num %}
+    <a class="base-link mx-2" onclick="otherPage({{pagination.prev_num}})"><i class="fas fa-angle-left"></i></a>
+{% endif %}
+
+{% for page in pagination.iter_pages() %}
+    {% if page %}
+        {% if page != pagination.page %}
+            <a class="base-link mx-2" onclick="otherPage({{page}})">{{ page }}</a>
+        {% else %}
+            <li class="not-italic mx-2 uta-orange">{{ page }}</li>
+        {% endif %}
+    {% else %}
+        <span class=ellipsis><i class="fas fa-ellipsis-h uta-orange" data-fa-transform="shrink-4 down-4"></i></span>
+    {% endif %}
+{%- endfor %}
+
+{% if pagination.next_num %}
+    <a class="base-link mx-2" onclick="otherPage({{pagination.next_num}})"><i class="fas fa-angle-right"></i></a>
+{% endif %}
+
+    TOTAL: {{pagination.total}}
+</div>
+
+<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Location</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2">US States</div>
+                <div class="col-md-8">
+                    <select class="chosen-select" id="usstate" name="usstate"></select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" id="btn_state">Add</button>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-2">Other Countries</div>
+                <div class="col-md-8">
+                    <select class="chosen-select" id="country" name="country"></select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" id="btn_country">Add</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <select id="selectedlist" multiple style="width: 100%"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <button type="button" class="btn btn btn-danger" id="btn_remove">Remove</button>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+          </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_js_import %}
+<script src="{{ url_for("static", filename="js/chosen.jquery.js") }}?gh_v={{ git_hash }}"></script>
+<script src="{{ url_for("static", filename="js/bootstrap-slider.js") }}?gh_v={{ git_hash }}"></script>
+<script type="application/javascript"> 
+    $(document).ready(function () {
+        //graduation year
+        var oldYears = $('#old-gradyear').val().split(";");
+        var years = $('#year-range').val().split(";");
+        var rangeYears = [];
+
+        years.forEach(function(y) {
+            rangeYears.push(parseInt(y));
+        });
+
+        $("#gradyear").slider({
+            ticks : rangeYears,
+            ticks_labels : rangeYears,
+            value : [parseInt(oldYears[0]),parseInt(oldYears[1])],
+            range : "true",
+        }).on('slideStop', submitForm).data('slider');
+
+        //location
+        $.getJSON("{{ url_for("static", filename="assets/dropdownlist.json") }}", function( data ) {
+            $("#country").append("<option value=''>Please Select</option>");
+
+            $.each(data["Country"], function( key, val ) {
+                if($("#old_country").val().includes(key)) {
+                    $("#country").append("<option value='" + key + "' disabled>" + val + "</option>" );
+                }
+                else{
+                    $("#country").append("<option value='" + key + "'>" + val + "</option>");
+                }
+            });
+
+            $("#country").chosen({width: '100%'});
+
+            $("#usstate").append("<option value=''>Please Select</option>");
+
+             $.each(data["State"], function( key, val ) {
+                if($("#old_state").val().includes(key)) {
+                    $("#usstate").append("<option value='" + key + "' disabled>" + val + "</option>" );
+                }
+                else{
+                    $("#usstate").append("<option value='" + key + "'>" + val + "</option>");
+                }
+            });
+
+             $("#usstate").chosen({width: '100%'});
+
+            var locations = "";
+            var oldcountries = $('#old_country').val().split(";");
+
+            for (i = 0; i < oldcountries.length; i++) { 
+                if(oldcountries[i].trim()!=""){
+                    var selectedItem = $("#country option[value='"+oldcountries[i]+"']");
+
+                    locations += selectedItem.text();
+
+                    $('#selectedlist').append("<option value='" + selectedItem.val() + "'>" + "US/" + selectedItem.text() + "</option>");
+
+                    if(i!=oldcountries.length-1){
+                        locations+= " OR "
+                    }
+                }
+            }
+
+            var oldstates = $('#old_state').val().split(";");
+
+            if($('#old_country').val().length!=0 && $('#old_state').val().length!=0){
+                locations+= " OR ";
+            }
+
+            for (i = 0; i < oldstates.length; i++) { 
+                if(oldstates[i].trim()!=""){
+                    var selectedItem = $("#usstate option[value='"+oldstates[i]+"']");
+
+                    locations += "US/" + selectedItem.text();
+
+                    $('#selectedlist').append("<option value='" + selectedItem.val() + "'>" + "US/" + selectedItem.text() + "</option>");
+
+                    if(i!=oldstates.length-1){
+                        locations+= " OR ";
+                    }
+                }
+            }
+
+            $('#locations').append(locations);
+        });
+
+        //degree
+        for (var i = 0; i < document.getElementsByName("degree")[0].options.length; ++i) {
+            if ($("#old-degree").val().includes(document.getElementsByName("degree")[0].options[i].value))
+                document.getElementsByName("degree")[0].options[i].selected = true;
+        }
+
+        $("#degree").chosen({width: '100%'});
+        $("#names").val($("#old-names").val());
+    });
+
+    function otherPage(pageNumber){
+        $('#page-number').val(pageNumber);
+        $('#searchForm').submit();
+    }
+
+    function submitForm(){
+        $('#searchForm').submit();
+    }
+
+    $('#names').keyup(function(e) {
+        if (e.which == 13){
+            submitForm();
+        }
+    });
+
+    $('#degree').on('change', function(evt, params) {
+        submitForm();
+    });
+
+    $('#btn_country').click(function(e) {
+        $('#new_country').val($('#country').val());
+        submitForm();
+    });
+
+    $('#btn_state').click(function(e) {
+        $('#new_state').val($('#usstate').val());
+        submitForm();
+    });
+
+    $('#btn_remove').click(function(e) {
+        $.each( $("#selectedlist :selected"), function( key, obj ) {
+            if(obj.value.length==3){
+                $('#old_country').val($('#old_country').val().replace(obj.value, ''));
+            }
+            else if(obj.value.length==2){
+                $('#old_state').val($('#old_state').val().replace(obj.value, ''));
+            }
+        });
+
+        submitForm();
+    });
+
+    $('#locationModal').on('shown.bs.modal', function (e) {
+        $( "#usstate" ).focus();
+    })
+</script>
+{% endblock %}

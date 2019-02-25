@@ -1,0 +1,145 @@
+/* body { padding: 2em; } */
+
+.instruction-list{
+  font-size: 1.2em;
+}
+
+/* Shared */
+.loginBtn {
+    box-sizing: border-box;
+    position: relative;
+    /* width: 13em;  - apply for fixed size */
+    margin: 0.2em;
+    padding: 0 15px 0 46px;
+    border: none;
+    text-align: left;
+    line-height: 34px;
+    white-space: nowrap;
+    border-radius: 0.2em;
+    font-size: 16px;
+    color: #FFF;
+  }
+  .loginBtn:before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 100%;
+  }
+  .loginBtn:focus {
+    outline: none;
+  }
+  .loginBtn:active {
+    box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
+  }
+  
+  
+  /* Facebook */
+  .loginBtn--facebook {
+    background-color: #4C69BA;
+    background-image: linear-gradient(#4C69BA, #3B55A0);
+    /*font-family: "Helvetica neue", Helvetica Neue, Helvetica, Arial, sans-serif;*/
+    text-shadow: 0 -1px 0 #354C8C;
+    width: 15em;
+    margin-top: 5%;
+  }
+  .loginBtn--facebook--nomargintop {
+    background-color: #4C69BA;
+    background-image: linear-gradient(#4C69BA, #3B55A0);
+    /*font-family: "Helvetica neue", Helvetica Neue, Helvetica, Arial, sans-serif;*/
+    text-shadow: 0 -1px 0 #354C8C;
+    width: 15em;
+    margin-top: 0%;
+  }
+  .loginBtn--facebook:before {
+    border-right: #364e92 1px solid;
+    background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png') 6px 6px no-repeat;
+  }
+  .loginBtn--facebook--nomargintop:before {
+    border-right: #364e92 1px solid;
+    background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png') 6px 6px no-repeat;
+  }
+  .loginBtn--facebook:hover,
+  .loginBtn--facebook:focus {
+    background-color: #5B7BD5;
+    background-image: linear-gradient(#5B7BD5, #4864B1);
+  }
+  .loginBtn--facebook--nomargintop:hover,
+  .loginBtn--facebook--nomargintop:focus {
+    background-color: #5B7BD5;
+    background-image: linear-gradient(#5B7BD5, #4864B1);
+  }
+
+  
+  /* Google */
+  .loginBtn--google {
+    /*font-family: "Roboto", Roboto, arial, sans-serif;*/
+    background: #DD4B39;
+    width: 15em;
+  }
+  .loginBtn--google:before {
+    border-right: #BB3F30 1px solid;
+    background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat;
+  }
+  .loginBtn--google:hover,
+  .loginBtn--google:focus {
+    background: #E74B37;
+  }
+
+
+  /* Google */
+  .loginBtn--linkedin {
+    /*font-family: "Roboto", Roboto, arial, sans-serif;*/
+    background: green;
+    width: 15em;
+    margin-top: 8%;
+  }
+  .loginBtn--linkedin:before {
+    border-right: green solid;
+    background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_linkedin.png') 6px 6px no-repeat;
+  }
+  .loginBtn--linkedin:hover,
+  .loginBtn--linkedin:focus {
+    background: green;
+  }
+
+
+  /* Sign Up */
+  .loginBtn--signup {
+    /*font-family: "Roboto", Roboto, arial, sans-serif;*/
+    padding: 0px 46px;
+    background: rgb(245,128,38);
+    width: 15em;
+    text-align: center;
+    margin-top: 25%;
+  }
+  .loginBtn--signup:before {
+    border-right: rgb(245,128,38) 1px solid;
+    width: 15em;
+    /* background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat; */
+  }
+  .loginBtn--signup:hover,
+  .loginBtn--signup:focus {
+    width: 15em;
+    background: grgb(245,128,38);
+  }
+
+
+    /* Sign Up */
+    .loginBtn--exit {
+      /*font-family: "Roboto", Roboto, arial, sans-serif;*/
+      padding: 0px 46px;
+      background: red;
+      width: 13em;
+      text-align: center;
+    }
+    .loginBtn--exit:before {
+      border-right: red;
+      /* background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat; */
+    }
+    .loginBtn--exit:hover,
+    .loginBtn--exit:focus {
+      background: red;
+    }

@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="card index-welcome d-flex justify-content-center">
+    <div class="align-middle my-auto mx-auto pl-5 py-5 text-block-center">
+        <h1>Welcome to CSE <i class="uta-dark-blue not-italic">Mav</i><i class="uta-orange">Apps</i></h1>
+        {% if current_user.is_authenticated %}
+            <p><small><i class="fas fa-asterisk"></i> Get started using apps by selecting one from the navigation bar up top!</small></p>
+        {% else %}
+            <p><small> <i class="fas fa-asterisk"></i> Login to access faculty and student apps, or if you want to edit your profile!</small></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
